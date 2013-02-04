@@ -1,4 +1,4 @@
-djangochemdb
+openmolDB
 ============
 
 Django based chemical database/inventory
