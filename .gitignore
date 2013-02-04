@@ -1,3 +1,6 @@
 *.pyc
 *.sqlite
 *.csv
+*~
+*.bak
+*.BAK
