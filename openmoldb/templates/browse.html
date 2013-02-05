@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+<script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb-libs.js"></script>
+<script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb.js"></script>
+{% if mollist.has_previous %}
+
+{% else %}
+<div class="alert alert-info">
+<strong>Number of molecules: {{ofmols}}</strong>
+</div>
+{% endif %}
+
+{% for mol in mollist %}
+<section id="mol{{mol.id}}">
+        <a href="{{servername}}/molecule/{{mol.id}}"><h2><i class="icon-beaker"></i> {{mol.name}}</h2></a>
+        <div class=row>
+        <div class=span2>
+            <script>
+            var viewACS = new ChemDoodle.ViewerCanvas('{{mol.id}}', 100, 100);
+            viewACS.specs.bonds_width_2D = .6;
+            viewACS.specs.bonds_saturationWidth_2D = .18;
+            viewACS.specs.bonds_hashSpacing_2D = 2.5;
+            viewACS.specs.atoms_font_size_2D = 10;
+            viewACS.specs.atoms_font_families_2D = ['Helvetica', 'Arial', 'sans-serif'];
+            viewACS.specs.atoms_displayTerminalCarbonLabels_2D = true;
+            var caffeineMolFile = '{{mol.molfile}}';
+            var caffeine = ChemDoodle.readMOL(caffeineMolFile);
+            caffeine.scaleToAverageBondLength(14.4);
+            viewACS.loadMolecule(caffeine);
+            </script>
+            <p><strong><abbr title="Chemical Abstracts Service registry number">CAS:</abbr></strong> {{mol.CAS}}</p>
+        </div>
+        <div class=span3>
+            <h4>Properties</h4>
+            <p><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr>:</strong> {{mol.SMILES}}</p>
+            <p><strong><abbr title="Molecular weight">MW:</abbr></strong> {{mol.CMW}}</p>
+            <p><strong>Brutto formula:</strong> {{mol.CHN}}</p>
+        </div>
+        <div class=span3>
+            <h4>Availability</h4>
+            <p><strong>Supplier and code:</strong> {{mol.supp1}}; {{mol.suppID1}}</p>
+            <p><strong>Storage ID:</strong> {{mol.storageID}}</p>
+            <p><strong>Quantity:</strong> {{mol.amount}} {{mol.unit}}</p>
+        </div>
+        </div>
+</section>
+<hr>
+{% endfor %}
+
+<section class="pagination pagination-mini">
+    <ul>
+        {% if mollist.has_previous %}
+            <li><a href="{{currentpath}}page={{ mollist.previous_page_number }}">«</a></li>
+        {% else %}
+            <li class="disabled"><a href="">«</a></li>
+        {% endif %}
+
+        {% for pagen in mollist.paginator.page_range %}
+            {% ifequal currpage pagen %}
+            <li><a href="{{currentpath}}page={{pagen}}"><strong>{{pagen}}</strong></a></li>
+            {% else %}
+            <li><a href="{{currentpath}}page={{pagen}}">{{pagen}}</a><li>
+            {% endifequal %}
+        {% endfor %}
+        {% if mollist.has_next %}
+            <li><a href="{{currentpath}}page={{ mollist.next_page_number }}">»</a></li>
+        {% else %}
+            <li class="disabled"><a href="">»</a></li>
+        {% endif %}
+        
+    </ul>
+</section>
+
+</div>
+
+{% endblock %}

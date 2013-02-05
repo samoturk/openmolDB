@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb-libs.js"></script>
+<script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb.js"></script>
+
+<section id="molecule">
+        <h1><i class="icon-beaker"></i> {{mol.name}}</h1>
+        <div class=row>
+        <div class=span4>
+        <p>
+        <script>
+    var viewACS = new ChemDoodle.ViewerCanvas('viewACS', 200, 200);
+    viewACS.specs.bonds_width_2D = 1.2;
+    viewACS.specs.bonds_saturationWidth_2D = .36;
+    viewACS.specs.bonds_hashSpacing_2D = 5;
+    viewACS.specs.atoms_font_size_2D = 12;
+    viewACS.specs.atoms_font_families_2D = ['Helvetica', 'Arial', 'sans-serif'];
+    viewACS.specs.atoms_displayTerminalCarbonLabels_2D = true;
+    var MolFile = '{{mol.molfile}}';
+    var Mol = ChemDoodle.readMOL(MolFile);
+    Mol.scaleToAverageBondLength(18);
+    viewACS.loadMolecule(Mol);
+</script>
+        </p>
+            <p><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr>:</strong> {{mol.SMILES}}</p>
+            <p><strong><abbr title="Chemical Abstracts Service registry number">CAS:</strong></abbr> {{mol.CAS}}</p>
+            <p><strong>Other names:</strong> {{mol.name2}}</p>
+        </div>
+        <div class=span3>
+            <h4>Properties</h4>
+            <p><strong><abbr title="Molecular weight">MW</abbr>:</strong> {{mol.CMW}}</p>
+            <p><strong><abbr title="Hydrogen bond acceptors">HBA</abbr>:</strong> {{mol.HBA}}</p>
+            <p><strong><abbr title="Hydrogen bond donors">HBD</abbr>:</strong> {{mol.HBD}}</p>
+            <p><strong><abbr title="Logarithm of partition coefficient">LogP</abbr>:</strong> {{mol.logP}}</p>
+            <p><strong><abbr title="Topological polar surface area">TPSA</abbr>:</strong> {{mol.tpsa}}</p>
+            <p><strong>Rotatable bonds:</strong> {{mol.nrb}}</p>
+            <p><strong>Complexity:</strong> {{mol.complexity}}</p>
+            <p><strong>Brutto formula:</strong> {{mol.CHN}}</p>
+        </div>
+        <div class=span3>
+            <h4>Availability</h4>
+            <p><strong>Suppliers:</strong> {{mol.supp1}}</p>
+            <p><strong>Supplier Codes:</strong> {{mol.suppID1}}</p>
+            <p><strong>Storage ID:</strong> {{mol.storageID}}</p>
+            <p><strong>Quantity:</strong> {{mol.amount}} {{mol.unit}}</p>
+            <p></p>
+            <p><strong>Added:</strong> {{mol.added}}</p>
+        </div>
+        </div>
+        <div>
+        <hr>
+        <h4>Comment</h4>
+        <p>{{mol.comment}}</p>
+        </div>
+</section>
+
+</div>
+
+{% endblock %}

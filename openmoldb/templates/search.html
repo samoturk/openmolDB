@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block content %}
+<script>
+$(document).ready(function(){
+
+$("#info").slideUp();
+$("#infobutton").click(function () {
+if ($("#info").is(":hidden")) {
+        $("#info").show("slow");
+    } else {
+        $("#info").slideUp();
+}
+});
+
+$("#alert").click(function () {
+
+        $("#alert").slideUp();
+
+});
+});
+</script>
+
+<meta charset="utf-8" http-equiv="X-UA-Compatible" chrome=1>
+<link rel="stylesheet" type="text/css" href="{{servername}}/static/js/ChemDoodleWeb.css" />
+<link rel="stylesheet" href="{{servername}}/static/js/sketcher/jquery-ui-1.9.2.custom.css" type="text/css">
+
+<script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb-libs.js"></script>
+<script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb.js"></script>
+<script type="text/javascript" src="{{servername}}/static/js/sketcher/jquery-ui-1.9.2.custom.min.js"></script>
+
+<script type="text/javascript" src="{{servername}}/static/js/sketcher/ChemDoodleWeb-sketcher.js"></script>
+
+<section id="search">
+    <button class="btn btn-info" id="infobutton"><i class="icon-question-sign"></i> How to use this form.</button>
+    <div class="alert alert-info" id="info">
+    <ul>
+    <li>You can either draw a structure in structure editor or input SMILES/SMARTS.</li>
+    <li>If you choose to use editor, you have to click "Get mol file" prior form submission.</li>
+    <li>For more advanced substructure search use of <a href="http://www.daylight.com/dayhtml/doc/theory/theory.smarts.html">SMARTS</a> is recommended.</li>
+    </ul>
+    </div>
+    <hr>
+    {% if error %}
+    <div class="alert alert-error" id="alert">
+    <button type="button" class="close alert" id="alert" data-dismiss="alert">&times;</button>
+    <strong>Error in submitted data!</strong> 
+    {% for e in error %}
+    <p>{{e}}</p>
+    {% endfor %}
+    </div>
+    {% endif %}
+
+<form class="form-horizontal" action="/search/" method="get">
+    
+<label class="control-label" for="sketcher"><strong>Structure editor</strong></label>
+
+<div class=controls name=sketcher>
+
+<script type="text/javascript">
+ChemDoodle.ELEMENT['H'].jmolColor = 'black';
+ChemDoodle.ELEMENT['S'].jmolColor = '#B9A130';
+var sketcher = new ChemDoodle.SketcherCanvas('sketcher', 368, 200, {useServices:false, oneMolecule:true}, ChemDoodle.featureDetection.supports_touch(), true);
+sketcher.specs.atoms_displayTerminalCarbonLabels_2D = true;
+sketcher.specs.atoms_useJMOLColors = true;
+sketcher.specs.bonds_clearOverlaps_2D = true;
+sketcher.specs.bonds_overlapClearWidth_2D = 2;
+sketcher.repaint();
+function submitform()
+{
+    var mol = sketcher.getMolecule();
+    var mol2 = ChemDoodle.writeMOL(mol);
+    document.getElementById('id_moltext').value = mol2;
+}
+</script>
+</div>
+<label class="control-label" for="moltext" >
+<strong><input class="btn btn-link" name="Submitmol" value="Get mol file" onclick="javascript:submitform()"/></strong>
+</label>
+<div class="controls">
+{{form.moltext}}
+</div>
+<hr>
+    <label class="control-label" for="SMILES" ><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr>/</strong><strong><abbr title="SMiles ARbitrary Target Specification">SMARTS</abbr></strong></label>
+    <div class="controls">
+    {{form.smiles}}
+    </div>
+    <label class="control-label" for="tanimoto"><strong>Tanimoto</strong></label>
+    <div class="controls">
+    {{form.tanimoto}}
+    </div>
+    <hr>
+    <h4>Properties (min./max.)</h4>
+    <label class="control-label" for="MW"><strong>Molecular weight:</strong></label>
+    <div class="controls row">
+    {{form.minmw}}
+    {{form.maxmw}}
+    </div>
+    
+    <label class="control-label" for="MinLogP"><strong>LogP:</strong></label>
+    <div class="controls row">
+    {{form.minlogp}}
+    {{form.maxlogp}}
+    </div>
+    
+    <label class="control-label" for="MinHBD"><strong>H-bond donors:</strong></label>
+    <div class="controls row">
+    {{form.minhba}}
+    {{form.maxhba}}
+    </div>
+    
+    <label class="control-label" for="MinHBA"><strong>H-bond acceptors:</strong></label>
+    <div class="controls row">
+    {{form.minhbd}}
+    {{form.maxhbd}}
+    </div>
+    
+    <br>
+    <label class="control-label" for="MinHBA"><strong>Molecular formula:</strong></label>
+    <div class="controls row">
+    {{form.chn}}
+    </div>
+    
+    <hr>
+    <h4>Names and IDs</h4>
+    
+    <label class="control-label" for="Storage"><strong>StorageID:</strong></label>
+    <div class="controls row">
+    {{form.storageid}}
+    </div>
+    
+    <label class="control-label" for="CAS"><strong><abbr title="Chemical Abstracts Service registry number">CAS:</abbr></strong></label>
+    <div class="controls row">
+    {{form.cas}}
+    </div>
+    
+    <label class="control-label" for="Name"><strong>Name:</strong></label>
+    <div class="controls row">
+    {{form.name}}
+    </div>
+    
+    <label class="control-label" for="suppID"><strong>Supplier:</strong></label>
+    <div class="controls row">
+    {{form.supplier}}
+    </div>
+    
+    <label class="control-label" for="suppID"><strong>Supplier ID:</strong></label>
+    <div class="controls row">
+    {{form.supplierid}}
+    </div>
+    
+    <div class="control-group">
+    <div class="form-actions">
+    <input type="submit" class="btn btn-primary" name="similarity" value="Similarity">
+    <input type="submit" class="btn btn-primary" name="substructure" value="Substructure">
+    <input type="submit" class="btn btn-primary" name="properties" value="Only properties and IDs">
+    </div>
+    </div>
+    </form>
+
+</section>
+</div>
+
+{% endblock %}

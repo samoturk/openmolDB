@@ -1,0 +1,452 @@
+{% extends "base.html" %}
+{% block content %}
+
+<script type="text/javascript" src="{{servername}}/static/js/flot/jquery.flot.js"></script>
+<script type="text/javascript" src="{{servername}}/static/js/flot/jquery.flot.symbol.js"></script>
+<script type="text/javascript" src="{{servername}}/static/js/flot/jquery.flot.axislabels.js"></script>
+<script>
+var hideall = function(){
+        $("#MolecularWeight").slideUp();
+        $("#LogP").slideUp();
+        $("#HBA").slideUp();
+        $("#HBD").slideUp();
+        $("#TPSA").slideUp();
+
+}
+$(document).ready(function(){
+hideall();
+$("#MolecularWeight").show("slow");
+
+$("#MWlink").click(function () {
+hideall();
+if ($("#MolecularWeight").is(":hidden")) {
+        $("#MolecularWeight").show("slow");
+      } else {
+        $("#MolecularWeight").slideUp();
+}
+});
+
+$("#LogPlink").click(function () {
+hideall();
+if ($("#LogP").is(":hidden")) {
+        $("#LogP").show("slow");
+      } else {
+        $("#LogP").slideUp();
+}
+});
+
+$("#HBDlink").click(function () {
+hideall();
+if ($("#HBD").is(":hidden")) {
+        $("#HBD").show("slow");
+      } else {
+        $("#HBD").slideUp();
+}
+});
+
+$("#HBAlink").click(function () {
+hideall();
+if ($("#HBA").is(":hidden")) {
+        $("#HBA").show("slow");
+      } else {
+        $("#HBA").slideUp();
+}
+});
+
+$("#TPSAlink").click(function () {
+hideall();
+if ($("#TPSA").is(":hidden")) {
+        $("#TPSA").show("slow");
+      } else {
+        $("#TPSA").slideUp();
+}
+});
+
+});
+</script>
+
+<style type="text/css">
+.legend table, .legend > div { height: 55px !important; opacity: 1 !important; left: 45px; top: 10px; width: 85px !important; }
+.legend table { border: 1px solid #555; padding: 5px; }
+
+</style>
+
+
+
+<div class="tabbable tabs-top">
+<ul class="nav nav-tabs">
+    <li id="MWlink"><a><i class="icon-caret-right"></i> Molecular weight</a></li>
+    <li id="LogPlink"><a><i class="icon-caret-right"></i> LogP</a></li>
+    <li id="HBDlink"><a><i class="icon-caret-right"></i> H-bond donors</a></li>
+    <li id="HBAlink"><a><i class="icon-caret-right"></i> H-bond acceptors</a></li>
+    <li id="TPSAlink"><a><i class="icon-caret-right"></i> TPSA</a></li>
+</ul>
+</div>
+
+<section id="MolecularWeight">
+    <h3>Molecular weight</h3>
+    <div id="mwhist" style="height:300px; width:650px;"></div>
+</section>
+
+<section id="LogP">
+    <h3>LogP</h3>
+    <div id="logpscat" style="height:300px; width:650px;"></div>
+    <div id="logphist" style="height:300px; width:650px;"></div>
+</section>
+
+<section id="HBD">
+    <h3>H-bond donors</h3>
+    <div id="hbdscat" style="height:300px; width:650px;"></div>
+    <div id="hbdhist" style="height:300px; width:650px;"></div>
+</section>
+
+<section id="HBA">
+    <h3>H-bond acceptors</h3>
+    <div id="hbascat" style="height:300px; width:650px;"></div>
+    <div id="hbahist" style="height:300px; width:650px;"></div>
+</section>
+
+<section id="TPSA">
+    <h3>Polar surface area</h3>
+    <div id="tpsascat" style="height:300px; width:650px;"></div>
+    <div id="tpsahist" style="height:300px; width:650px;"></div>
+</section>
+</div>
+</div>
+
+<script class="code" type="text/javascript">
+var mwhist = {{mwhist|safe}};
+$(document).ready(function() {
+    $.plot($("#mwhist"), [mwhist], {
+        xaxis: {
+            tickSize: 50,
+            tickLength: 0,
+            tickDecimals: 0,
+            axisLabel: "Molecular weight",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        yaxis: {
+            axisLabel: "#",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        bars: {
+            show: true,
+            barWidth: 30,
+        },
+        series: {
+            shadowSize: 5,
+            color: "#2F4F4F",
+        },
+        grid: {
+            hoverable: true,
+            clickable: false,
+        },
+        
+    });
+
+});
+
+var logpscat = {{logpmw|safe}};
+$(document).ready(function() {
+    $.plot($("#logpscat"), [logpscat], {
+        xaxis: {
+            tickSize: 1,
+            tickLength: 0,
+            tickDecimals: 0,
+            axisLabel: "LogP",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        yaxis: {
+            axisLabel: "Molecular weight",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        series: {
+            points: {
+                radius: 3,
+                show: true,
+                fill: true,
+                symbol: "cross",
+            },
+            shadowSize: 5,
+            color: "#FFD700",
+        },
+        grid: {
+            hoverable: true,
+        },
+    });
+});
+
+var logphist = {{logphist|safe}};
+$(document).ready(function() {
+    $.plot($("#logphist"), [logphist], {
+        xaxis: {
+            tickSize: 1,
+            tickLength: 0,
+            tickDecimals: 0,
+            axisLabel: "LogP",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        yaxis: {
+            axisLabel: "#",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        bars: {
+            show: true,
+            barWidth: 1,
+        },
+        series: {
+            shadowSize: 5,
+            color: "#FFD700",
+        },
+        grid: {
+            hoverable: true,
+            clickable: false,
+        },
+        
+    });
+
+});
+
+var hbdscat = {{hbdmw|safe}};
+$(document).ready(function() {
+    $.plot($("#hbdscat"), [hbdscat], {
+        xaxis: {
+            tickSize: 1,
+            tickLength: 0,
+            tickDecimals: 0,
+            axisLabel: "H-bond donors",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        yaxis: {
+            axisLabel: "Molecular weight",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        series: {
+            points: {
+                radius: 3,
+                show: true,
+                fill: true,
+                symbol: "cross",
+            },
+            shadowSize: 5,
+            color: "#483D8B",
+        },
+        grid: {
+            hoverable: true,
+        },
+    });
+});
+
+var hbdhist = {{hbdhist|safe}};
+$(document).ready(function() {
+    $.plot($("#hbdhist"), [hbdhist], {
+        xaxis: {
+            tickSize: 1,
+            tickLength: 0,
+            tickDecimals: 0,
+            axisLabel: "H-bond donors",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        yaxis: {
+            axisLabel: "#",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        bars: {
+            show: true,
+            barWidth: 0.7,
+        },
+        series: {
+            shadowSize: 5,
+            color: "#483D8B",
+        },
+        grid: {
+            hoverable: true,
+            clickable: false,
+        },
+        
+    });
+
+});
+
+var hbascat = {{hbamw|safe}};
+$(document).ready(function() {
+    $.plot($("#hbascat"), [hbascat], {
+        xaxis: {
+            tickSize: 1,
+            tickLength: 0,
+            tickDecimals: 0,
+            axisLabel: "H-bond acceptors",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        yaxis: {
+            axisLabel: "Molecular weight",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        series: {
+            points: {
+                radius: 3,
+                show: true,
+                fill: true,
+                symbol: "cross",
+            },
+            shadowSize: 5,
+            color: "#B22222",
+        },
+        grid: {
+            hoverable: true,
+        },
+    });
+});
+
+var hbahist = {{hbahist|safe}};
+$(document).ready(function() {
+    $.plot($("#hbahist"), [hbahist], {
+        xaxis: {
+            tickSize: 1,
+            tickLength: 0,
+            tickDecimals: 0,
+            axisLabel: "H-bond acceptors",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        yaxis: {
+            axisLabel: "#",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        bars: {
+            show: true,
+            barWidth: 1,
+        },
+        series: {
+            shadowSize: 5,
+            color: "#B22222",
+        },
+        grid: {
+            hoverable: true,
+            clickable: false,
+        },
+        
+    });
+
+});
+
+var tpsascat = {{tpsamw|safe}};
+$(document).ready(function() {
+    $.plot($("#tpsascat"), [tpsascat], {
+        xaxis: {
+            tickSize: 50,
+            tickLength: 0,
+            tickDecimals: 0,
+            axisLabel: "Polar surface area",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        yaxis: {
+            axisLabel: "Molecular weight",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        series: {
+            points: {
+                radius: 3,
+                show: true,
+                fill: true,
+                symbol: "cross",
+            },
+            shadowSize: 5,
+            color: "#8B008B",
+        },
+        grid: {
+            hoverable: true,
+        },
+    });
+});
+
+var tpsahist = {{tpsahist|safe}};
+$(document).ready(function() {
+    $.plot($("#tpsahist"), [tpsahist], {
+        xaxis: {
+            tickSize: 50,
+            tickLength: 0,
+            tickDecimals: 0,
+            axisLabel: "Polar surface area",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        yaxis: {
+            axisLabel: "#",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        bars: {
+            show: true,
+            barWidth: 20,
+        },
+        series: {
+            shadowSize: 5,
+            color: "#8B008B",
+        },
+        grid: {
+            hoverable: true,
+            clickable: false,
+        },
+        
+    });
+
+});
+
+
+</script>
+
+</div>
+
+{% endblock %}
