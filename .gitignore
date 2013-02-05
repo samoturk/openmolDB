@@ -1,5 +1,9 @@
 *.pyc
 *.sqlite
+*.sqlite3
+*.xls
+*.xlsm
+*.xlsx
 *.csv
 *~
 *.bak
