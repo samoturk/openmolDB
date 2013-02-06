@@ -4,7 +4,7 @@ import csv
 
 from openmoldbmolecules.models import Molecule
 
-def make_db_full(data):
+def add_mols(data):
     namec = ""
     name2c = ""
     suppc = ""
@@ -195,12 +195,24 @@ def make_db_full(data):
                     smarts = pybel.Smarts("[!$([NH]!@C(=O))&!D1&!$(*#*)]\&!@[!$([NH]!@C(=O))&!D1&!$(*#*)]")
                     rb = smarts.findall(mol)
                     nrb = len(rb)
+                    #Calculate Fsp3
+                    sp3c = pybel.Smarts("[CX4]")
+                    nsp3c = sp3c.findall(mol)
+                    nsp3c = float(len(nsp3c))
+                    allc =  pybel.Smarts("[#6]")
+                    nallc = allc.findall(mol)
+                    nallc = float(len(nallc))
+                    if nallc > 0:
+                        fsp3 = nsp3c/nallc
+                        print fsp3
+                    else:
+                        fsp3 = ""
                     #Get fingerprint and molecular complexity
                     fprint = mol.calcfp()
                     bitson = fprint.bits
                     nbitson = len(bitson)
                     print name
-                    m = Molecule(name=name,SMILES=smiles, name2=name2, supp1=supp, suppID1=suppid, CMW=descs["MW"], CHN=CHN, HBA=HBA, HBD=HBD, logP=logP, tpsa=tpsa, amount=amount, unit=unit, CAS=cas, storageID=storageid, molfile=outMDL, nrb=nrb, fingerprint=bitson, complexity=nbitson, supp2=supp2, suppID2=suppid2 , comment=comm, typeOfCompound=typeofc)
+                    m = Molecule(name=name,SMILES=smiles, name2=name2, supp1=supp, suppID1=suppid, CMW=descs["MW"], CHN=CHN, HBA=HBA, HBD=HBD, logP=logP, tpsa=tpsa, amount=amount, unit=unit, CAS=cas, storageID=storageid, molfile=outMDL, nrb=nrb, fingerprint=bitson, complexity=nbitson, supp2=supp2, suppID2=suppid2 , comment=comm, typeOfCompound=typeofc, fsp3=fsp3)
                     m.save()
                 except:
                     m = Molecule(name=name,SMILES=smiles, name2=name2, supp1=supp, suppID1=suppid, amount=amount, unit=unit, CAS=cas, storageID=storageid, supp2=supp2, suppID2=suppid2 , comment=comm, typeOfCompound=typeofc)
@@ -215,5 +227,5 @@ def make_db_full(data):
 if __name__ == '__main__':	
     import sys
     datacard = sys.argv[1]
-    data = csv.reader(open(datacard), delimiter='\t')
-    make_db_full(data)
+    data = csv.reader(open(datacard), dialect='excel')
+    add_mols(data)

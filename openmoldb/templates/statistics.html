@@ -7,6 +7,9 @@
 <script>
 var hideall = function(){
         $("#MolecularWeight").slideUp();
+        $("#nrb").slideUp();
+        $("#fsp3").slideUp();
+        $("#complexity").slideUp();
         $("#LogP").slideUp();
         $("#HBA").slideUp();
         $("#HBD").slideUp();
@@ -25,6 +28,34 @@ if ($("#MolecularWeight").is(":hidden")) {
         $("#MolecularWeight").slideUp();
 }
 });
+
+$("#nrblink").click(function () {
+hideall();
+if ($("#nrb").is(":hidden")) {
+        $("#nrb").show("slow");
+      } else {
+        $("#nrb").slideUp();
+}
+});
+
+$("#fsp3link").click(function () {
+hideall();
+if ($("#fsp3").is(":hidden")) {
+        $("#fsp3").show("slow");
+      } else {
+        $("#fsp3").slideUp();
+}
+});
+
+$("#complexitylink").click(function () {
+hideall();
+if ($("#complexity").is(":hidden")) {
+        $("#complexity").show("slow");
+      } else {
+        $("#complexity").slideUp();
+}
+});
+
 
 $("#LogPlink").click(function () {
 hideall();
@@ -75,7 +106,10 @@ if ($("#TPSA").is(":hidden")) {
 
 <div class="tabbable tabs-top">
 <ul class="nav nav-tabs">
-    <li id="MWlink"><a><i class="icon-caret-right"></i> Molecular weight</a></li>
+    <li id="MWlink"><a><i class="icon-caret-right"></i> MW</a></li>
+    <li id="nrblink"><a><i class="icon-caret-right"></i> Rot. bonds</a></li>
+    <li id="fsp3link"><a><i class="icon-caret-right"></i> Fsp3</a></li>
+    <li id="complexitylink"><a><i class="icon-caret-right"></i> Complex</a></li>
     <li id="LogPlink"><a><i class="icon-caret-right"></i> LogP</a></li>
     <li id="HBDlink"><a><i class="icon-caret-right"></i> H-bond donors</a></li>
     <li id="HBAlink"><a><i class="icon-caret-right"></i> H-bond acceptors</a></li>
@@ -86,6 +120,23 @@ if ($("#TPSA").is(":hidden")) {
 <section id="MolecularWeight">
     <h3>Molecular weight</h3>
     <div id="mwhist" style="height:300px; width:650px;"></div>
+</section>
+
+<section id="nrb">
+    <h3>Number of rotatable bonds</h3>
+    <div id="nrbhist" style="height:300px; width:650px;"></div>
+</section>
+
+<section id="fsp3">
+    <h3>Fraction of sp3 carbons</h3>
+    <p>Fraction od sp3 carbons is calculated as (#sp3 carbons)/(#all carbons).</p>
+    <div id="fsp3hist" style="height:300px; width:650px;"></div>
+</section>
+
+<section id="complexity">
+    <h3>Molecular complexity</h3>
+    <p>Molecular complexity is calculated as number of bits set to ON in molecular fingerprint.</p>
+    <div id="complexityhist" style="height:300px; width:650px;"></div>
 </section>
 
 <section id="LogP">
@@ -142,6 +193,117 @@ $(document).ready(function() {
         series: {
             shadowSize: 5,
             color: "#2F4F4F",
+        },
+        grid: {
+            hoverable: true,
+            clickable: false,
+        },
+        
+    });
+
+});
+
+var nrbhist = {{nrbhist|safe}};
+$(document).ready(function() {
+    $.plot($("#nrbhist"), [nrbhist], {
+        xaxis: {
+            tickSize: 1,
+            tickLength: 0,
+            tickDecimals: 0,
+            axisLabel: "Number of rotatable bonds",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        yaxis: {
+            axisLabel: "#",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        bars: {
+            show: true,
+            barWidth: 1,
+        },
+        series: {
+            shadowSize: 5,
+            color: "#556B2F",
+        },
+        grid: {
+            hoverable: true,
+            clickable: false,
+        },
+        
+    });
+
+});
+
+var fsp3hist = {{fsp3hist|safe}};
+$(document).ready(function() {
+    $.plot($("#fsp3hist"), [fsp3hist], {
+        xaxis: {
+            tickSize: 10,
+            tickLength: 0,
+            tickDecimals: 0,
+            axisLabel: "Fraction of Sp3 carbons (%)",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        yaxis: {
+            axisLabel: "#",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        bars: {
+            show: true,
+            barWidth: 5,
+        },
+        series: {
+            shadowSize: 5,
+            color: "#B8860B",
+        },
+        grid: {
+            hoverable: true,
+            clickable: false,
+        },
+        
+    });
+
+});
+
+var complexityhist = {{complexityhist|safe}};
+$(document).ready(function() {
+    $.plot($("#complexityhist"), [complexityhist], {
+        xaxis: {
+            tickSize: 10,
+            tickLength: 0,
+            tickDecimals: 0,
+            axisLabel: "Number of bits on",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        yaxis: {
+            axisLabel: "#",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 14,
+            axisLabelFontFamily: "Verdana, Arial, Helvetica, Tahoma, sans-serif",
+            axisLabelPadding: 5
+        },
+        bars: {
+            show: true,
+            barWidth: 7,
+        },
+        series: {
+            shadowSize: 5,
+            color: "#E9967A",
         },
         grid: {
             hoverable: true,
@@ -356,7 +518,7 @@ $(document).ready(function() {
         },
         bars: {
             show: true,
-            barWidth: 1,
+            barWidth: 0.9,
         },
         series: {
             shadowSize: 5,

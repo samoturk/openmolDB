@@ -31,6 +31,7 @@ class Molecule(models.Model):
     tpsa = models.FloatField(null=True, blank=True, verbose_name='Polar surface area')
     fingerprint = models.TextField(blank=True, verbose_name='Fingerprint') #Fingerprint disabled for now
     nrb = models.IntegerField(null=True, blank=True, verbose_name='Number of rotatable bonds')
+    fsp3 = models.FloatField(null=True, blank=True)
     complexity = models.IntegerField(null=True, blank=True, verbose_name='Molecular complexity')
     amount = models.FloatField(null=True, blank=True, verbose_name='Quantity') # kolicina
     unit = models.CharField(max_length=10, blank=True, verbose_name='Unit') # enota

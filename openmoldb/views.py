@@ -163,6 +163,9 @@ def statistics(request):
     hbd = []
     tpsa = []
     names = []
+    fsp3 = []
+    nrb = []
+    complexity = []
     #c = 0 # uncomment for testing, it stops after 100
     for mol in Molecule.objects.all():
         try:
@@ -171,12 +174,18 @@ def statistics(request):
             float(mol.HBA)
             float(mol.HBD)
             float(mol.tpsa)
+            float(mol.fsp3)
+            float(mol.nrb)
+            float(mol.complexity)
             if mol.CMW <= 800:
                 logp.append(mol.logP)
                 mw.append(mol.CMW)
                 hba.append(mol.HBA)
                 hbd.append(mol.HBD)
                 tpsa.append(mol.tpsa)
+                fsp3.append(mol.fsp3*100)
+                nrb.append(mol.nrb)
+                complexity.append(mol.complexity)
                 if mol.name == "":
                     names.append("X")
                 else:
@@ -195,6 +204,12 @@ def statistics(request):
     #histograms
     mwhist, mwedge = histogram(mw, bins=20)
     mwhist = dumps(zip(array(mwedge[:-1]).tolist(), array(mwhist).tolist()))
+    fsp3hist, fsp3edge = histogram(fsp3, bins=20)
+    fsp3hist = dumps(zip(array(fsp3edge[:-1]).tolist(), array(fsp3hist).tolist()))
+    nrbhist, nrbedge = histogram(nrb, bins=35)
+    nrbhist = dumps(zip(array(nrbedge[:-1]).tolist(), array(nrbhist).tolist()))
+    complexityhist, complexityedge = histogram(complexity, bins=20)
+    complexityhist = dumps(zip(array(complexityedge[:-1]).tolist(), array(complexityhist).tolist()))
     logphist, logpedge = histogram(logp, bins=20)
     logphist = dumps(zip(array(logpedge[:-1]).tolist(), array(logphist).tolist()))
     hbahist, hbaedge = histogram(hba, bins=20)
@@ -203,5 +218,5 @@ def statistics(request):
     hbdhist = dumps(zip(array(hbdedge[:-1]).tolist(), array(hbdhist).tolist()))
     tpsahist, tpsaedge = histogram(tpsa, bins=15)
     tpsahist = dumps(zip(array(tpsaedge[:-1]).tolist(), array(tpsahist).tolist()))
-    return render(request, 'statistics.html', {'servername':servername, 'logpmw':logpmw, 'hbamw':hbamw, 'hbdmw':hbdmw, 'tpsamw':tpsamw, 'mwhist':mwhist, 'logphist':logphist, 'hbahist':hbahist, 'hbdhist':hbdhist, 'tpsahist':tpsahist})
+    return render(request, 'statistics.html', {'servername':servername, 'logpmw':logpmw, 'hbamw':hbamw, 'hbdmw':hbdmw, 'tpsamw':tpsamw, 'mwhist':mwhist, 'fsp3hist':fsp3hist, 'nrbhist':nrbhist, 'complexityhist':complexityhist, 'logphist':logphist, 'hbahist':hbahist, 'hbdhist':hbdhist, 'tpsahist':tpsahist})
 

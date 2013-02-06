@@ -22,19 +22,21 @@
     viewACS.loadMolecule(Mol);
 </script>
         </p>
-            <p><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr>:</strong> {{mol.SMILES}}</p>
             <p><strong><abbr title="Chemical Abstracts Service registry number">CAS:</strong></abbr> {{mol.CAS}}</p>
             <p><strong>Other names:</strong> {{mol.name2}}</p>
+            <p><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr>:</strong> {{mol.SMILES}}</p>
+
         </div>
         <div class=span3>
             <h4>Properties</h4>
-            <p><strong><abbr title="Molecular weight">MW</abbr>:</strong> {{mol.CMW}}</p>
+            <p><strong><abbr title="Molecular weight">MW</abbr>:</strong> {{mol.CMW|floatformat:3}}</p>
             <p><strong><abbr title="Hydrogen bond acceptors">HBA</abbr>:</strong> {{mol.HBA}}</p>
             <p><strong><abbr title="Hydrogen bond donors">HBD</abbr>:</strong> {{mol.HBD}}</p>
-            <p><strong><abbr title="Logarithm of partition coefficient">LogP</abbr>:</strong> {{mol.logP}}</p>
+            <p><strong><abbr title="Logarithm of partition coefficient">LogP</abbr>:</strong> {{mol.logP|floatformat:3}}</p>
             <p><strong><abbr title="Topological polar surface area">TPSA</abbr>:</strong> {{mol.tpsa}}</p>
             <p><strong>Rotatable bonds:</strong> {{mol.nrb}}</p>
             <p><strong>Complexity:</strong> {{mol.complexity}}</p>
+            <p><strong><abbr title="Fraction of sp3 carbons">Fsp3</abbr>:</strong> {{mol.fsp3|floatformat:3}}</p>
             <p><strong>Brutto formula:</strong> {{mol.CHN}}</p>
         </div>
         <div class=span3>
