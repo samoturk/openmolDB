@@ -19,6 +19,7 @@ class SearchForm(forms.Form):
     cas = forms.CharField(required=False, max_length=12, widget=forms.TextInput(attrs={'class':'span2', 'placeholder':'xxxx-xx-x'}))
     supplier = forms.CharField(required=False, max_length=20, widget=forms.TextInput(attrs={'class':'span2', 'placeholder':'xxxxx'}))
     supplierid = forms.CharField(required=False, max_length=20, widget=forms.TextInput(attrs={'class':'span2', 'placeholder':'xxxxx'}))
+    typeOfCompound = forms.CharField(required=False, max_length=20, widget=forms.TextInput(attrs={'class':'span2', 'placeholder':'chemical'}))
 
 """
 #This is implemented in views.py, since we don't need valid smiles for all searches

@@ -65,6 +65,7 @@ def search(request):
     supplierid = form.cleaned_data['supplierid']
     supplier = form.cleaned_data['supplier']
     cas = form.cleaned_data['cas']
+    typeofcompound = form.cleaned_data['typeOfCompound']
     if 'similarity' in request.GET:
         #similartiy search
         try:
@@ -77,7 +78,7 @@ def search(request):
                     smiles = str(form.cleaned_data['smiles'])
             query = pybel.readstring("smi", smiles)
             tanimoto = form.cleaned_data['tanimoto']
-            mollist = id_search(cas, name, storageid, supplierid, supplier, chn)
+            mollist = id_search(cas, name, storageid, supplierid, supplier, chn, typeofcompound)
             mollistsmiles = fast_fp_search(mollist, smiles, tanimoto)
             mollist = properties_search(mollistsmiles, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd)
             paginator = Paginator(mollist, 15)
@@ -109,7 +110,7 @@ def search(request):
                 except:
                     smarts = str(form.cleaned_data['smiles'])
             query = pybel.Smarts(smarts)
-            mollist = id_search(cas, name, storageid, supplierid, supplier, chn)
+            mollist = id_search(cas, name, storageid, supplierid, supplier, chn, typeofcompound)
             mollistsmart = smarts_search(mollist, smarts)
             mollist = properties_search(mollistsmart, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd)
             paginator = Paginator(mollist, 15)
@@ -132,7 +133,7 @@ def search(request):
             return render(request, 'search.html', {'servername':servername, 'error': error, 'form':form})
     elif 'properties' in request.GET:
         #properties and IDs search
-        mollist = id_search(cas, name, storageid, supplierid, supplier, chn)
+        mollist = id_search(cas, name, storageid, supplierid, supplier, chn, typeofcompound)
         if cas == '':
             mollist = properties_search(mollist, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd)
         
@@ -219,4 +220,7 @@ def statistics(request):
     tpsahist, tpsaedge = histogram(tpsa, bins=15)
     tpsahist = dumps(zip(array(tpsaedge[:-1]).tolist(), array(tpsahist).tolist()))
     return render(request, 'statistics.html', {'servername':servername, 'logpmw':logpmw, 'hbamw':hbamw, 'hbdmw':hbdmw, 'tpsamw':tpsamw, 'mwhist':mwhist, 'fsp3hist':fsp3hist, 'nrbhist':nrbhist, 'complexityhist':complexityhist, 'logphist':logphist, 'hbahist':hbahist, 'hbdhist':hbdhist, 'tpsahist':tpsahist})
+
+def upload(request):
+    return render(request, 'upload.html')
 

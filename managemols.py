@@ -162,9 +162,8 @@ def add_mols(data):
                 
                 if type(classc) == int:
                     typeofc = line[classc].decode("windows-1252").encode('utf-8','ignore')
-                    print typeofc
                 else:
-                    typeofc = "chemical"
+                    typeofc = ""
             
                 try:
                     amount = float(line[amountc])

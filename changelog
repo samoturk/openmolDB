@@ -2,3 +2,7 @@
 -added fsp3 (fraction of sp3 carbons)
 -added rounding of MW, logP and fsp3 to 3 decimals
 -added histograms for fsp3, rotatable bonds and complexity
+
+2013-02-07
+-added search by class
+-cosmetic changes
