@@ -2,13 +2,6 @@
 {% block content %}
 <script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb-libs.js"></script>
 <script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb.js"></script>
-{% if mollist.has_previous %}
-
-{% else %}
-<div class="alert alert-info">
-<strong>Number of molecules: {{ofmols}}</strong>
-</div>
-{% endif %}
 
 {% for mol in mollist %}
 <section id="mol{{mol.id}}">
@@ -46,29 +39,14 @@
 </section>
 <hr>
 {% endfor %}
-
+{{debugname}}
+{{uploadid}}
 <section class="pagination pagination-mini">
-    <ul>
-        {% if mollist.has_previous %}
-            <li><a href="{{currentpath}}page={{ mollist.previous_page_number }}">«</a></li>
-        {% else %}
-            <li class="disabled"><a href="">«</a></li>
-        {% endif %}
-
-        {% for pagen in mollist.paginator.page_range %}
-            {% ifequal currpage pagen %}
-            <li><a href="{{currentpath}}page={{pagen}}"><strong>{{pagen}}</strong></a></li>
-            {% else %}
-            <li><a href="{{currentpath}}page={{pagen}}">{{pagen}}</a><li>
-            {% endifequal %}
-        {% endfor %}
-        {% if mollist.has_next %}
-            <li><a href="{{currentpath}}page={{ mollist.next_page_number }}">»</a></li>
-        {% else %}
-            <li class="disabled"><a href="">»</a></li>
-        {% endif %}
-        
-    </ul>
+<form class="form-horizontal" action="" method="post">
+{% csrf_token %}
+<button class="btn btn-info btn-large" type="submit" value="confirm" name="confirm" >Confirm</button>
+</div>
+</form>
 </section>
 
 </div>

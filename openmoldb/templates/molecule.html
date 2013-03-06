@@ -23,7 +23,7 @@
 </script>
         </p>
             <p><strong><abbr title="Chemical Abstracts Service registry number">CAS:</strong></abbr> {{mol.CAS}}</p>
-            <p><strong>Other names:</strong> {{mol.name2}}</p>
+            <p><strong>Other names:</strong> {{mol.altname}}</p>
             <p><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr>:</strong> {{mol.SMILES}}</p>
 
         </div>
@@ -41,11 +41,11 @@
         </div>
         <div class=span3>
             <h4>Availability</h4>
-            <p><strong>Suppliers:</strong> {{mol.supp1}}</p>
-            <p><strong>Supplier Codes:</strong> {{mol.suppID1}}</p>
+            <p><strong>Suppliers:</strong> {{mol.supplier}}</p>
+            <p><strong>Supplier Codes:</strong> {{mol.supplierID}}</p>
             <p><strong>Storage ID:</strong> {{mol.storageID}}</p>
             <p><strong>Quantity:</strong> {{mol.amount}} {{mol.unit}}</p>
-            <p><strong>Class:</strong> {{mol.typeOfCompound}}</p>
+            <p><strong>Class:</strong> {{mol.molclass}}</p>
             <p><strong>Added:</strong> {{mol.added}}</p>
         </div>
         </div>

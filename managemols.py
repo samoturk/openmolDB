@@ -6,15 +6,15 @@ from openmoldbmolecules.models import Molecule
 
 def add_mols(data):
     namec = ""
-    name2c = ""
+    altnamec = ""
     suppc = ""
     suppidc = ""
     storc = ""
     amountc = ""
     unitc = ""
     casc = ""
-    supp2c = ""
-    suppID2c = ""
+    altsupplierc = ""
+    altsupplierIDc = ""
     commc = ""
     classc = ""
     counter = 0
@@ -24,8 +24,8 @@ def add_mols(data):
         cl = c.lower()
         if cl == "name":
             namec = counter
-        elif cl == "name2":
-            name2c = counter
+        elif cl == "altname":
+            altnamec = counter
         elif cl == "supplier":
             suppc = counter
         elif cl == "supplierid":
@@ -41,9 +41,9 @@ def add_mols(data):
         elif cl == "smiles":
             smilesc = counter
         elif cl == "supplier2":
-            supp2c = counter
+            altsupplierc = counter
         elif cl == "supplierid2":
-            suppID2c = counter
+            altsupplierIDc = counter
         elif cl == "comment":
             commc = counter
         elif cl == "class":
@@ -56,8 +56,8 @@ def add_mols(data):
         if type(namec) == int:
             print head[namec] + " ",
             
-        if type(name2c) == int:
-            print head[name2c] + " ",
+        if type(altnamec) == int:
+            print head[altnamec] + " ",
             
         if type(suppc) == int:
             print head[suppc] + " ",
@@ -80,11 +80,11 @@ def add_mols(data):
         if type(smilesc) == int:
             print head[smilesc] + " ",
         
-        if type(supp2c) == int:
-            print head[supp2c] + " ",
+        if type(altsupplierc) == int:
+            print head[altsupplierc] + " ",
         
-        if type(suppID2c) == int:
-            print head[suppID2c] + " ",
+        if type(altsupplierIDc) == int:
+            print head[altsupplierIDc] + " ",
         
         if type(commc) == int:
             print head[commc] + " ",
@@ -105,10 +105,10 @@ def add_mols(data):
                 else:
                     name = ""
                 
-                if type(name2c) == int:
-                    name2 = line[name2c].decode("windows-1252").encode('utf-8','ignore')
+                if type(altnamec) == int:
+                    altname = line[altnamec].decode("windows-1252").encode('utf-8','ignore')
                 else:
-                    name2 = ""
+                    altname = ""
             
                 if type(suppc) == int:
                     supp = line[suppc].decode("windows-1252").encode('utf-8','ignore')
@@ -145,15 +145,15 @@ def add_mols(data):
                 else:
                     smiles = ""
         
-                if type(supp2c) == int:
-                    supp2 = line[supp2c].decode("windows-1252").encode('utf-8','ignore')
+                if type(altsupplierc) == int:
+                    altsupplier = line[altsupplierc].decode("windows-1252").encode('utf-8','ignore')
                 else:
-                    supp2 = ""
+                    altsupplier = ""
         
-                if type(suppID2c) == int:
-                    suppid2 = line[suppID2c].decode("windows-1252").encode('utf-8','ignore')
+                if type(altsupplierIDc) == int:
+                    altsupplierID = line[altsupplierIDc].decode("windows-1252").encode('utf-8','ignore')
                 else:
-                    suppid2 = ""
+                    altsupplierID = ""
         
                 if type(commc) == int:
                     comm = line[commc].decode("windows-1252").encode('utf-8','ignore')
@@ -161,9 +161,9 @@ def add_mols(data):
                     comm = ""
                 
                 if type(classc) == int:
-                    typeofc = line[classc].decode("windows-1252").encode('utf-8','ignore')
+                    molclass = line[classc].decode("windows-1252").encode('utf-8','ignore')
                 else:
-                    typeofc = ""
+                    molclass = ""
             
                 try:
                     amount = float(line[amountc])
@@ -211,10 +211,10 @@ def add_mols(data):
                     bitson = fprint.bits
                     nbitson = len(bitson)
                     print name
-                    m = Molecule(name=name,SMILES=smiles, name2=name2, supp1=supp, suppID1=suppid, CMW=descs["MW"], CHN=CHN, HBA=HBA, HBD=HBD, logP=logP, tpsa=tpsa, amount=amount, unit=unit, CAS=cas, storageID=storageid, molfile=outMDL, nrb=nrb, fingerprint=bitson, complexity=nbitson, supp2=supp2, suppID2=suppid2 , comment=comm, typeOfCompound=typeofc, fsp3=fsp3)
+                    m = Molecule(name=name,SMILES=smiles, altname=altname, supplier=supp, supplierID=suppid, CMW=descs["MW"], CHN=CHN, HBA=HBA, HBD=HBD, logP=logP, tpsa=tpsa, amount=amount, unit=unit, CAS=cas, storageID=storageid, molfile=outMDL, nrb=nrb, fingerprint=bitson, complexity=nbitson, altsupplier=altsupplier, altsupplierID=altsupplierID , comment=comm, molclass=molclass, fsp3=fsp3)
                     m.save()
                 except:
-                    m = Molecule(name=name,SMILES=smiles, name2=name2, supp1=supp, suppID1=suppid, amount=amount, unit=unit, CAS=cas, storageID=storageid, supp2=supp2, suppID2=suppid2 , comment=comm, typeOfCompound=typeofc)
+                    m = Molecule(name=name,SMILES=smiles, altname=altname, supplier=supp, supplierID=suppid, amount=amount, unit=unit, CAS=cas, storageID=storageid, altsupplier=altsupplier, altsupplierID=altsupplierID , comment=comm, molclass=molclass)
                     m.save()
             #Save data to database
         else:

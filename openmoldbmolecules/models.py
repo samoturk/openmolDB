@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-#class TypeOfCompound(models.Model):
+#class molclass(models.Model):
 #    nameOfType = models.CharField(max_length=20)
 #    def __unicode__(self):
 #        return self.nameOfType
@@ -12,15 +12,14 @@ class Molecule(models.Model):
     Only name needed, date is added automatically
     """
     name = models.CharField(max_length=500, blank=True) # Chemical name1
-    name2 = models.CharField(max_length=500, blank=True) # Chemical name2
+    altname = models.CharField(max_length=500, blank=True) # Chemical altname
     storageID = models.CharField(max_length=30, blank=True) # StorageID
+    storage = models.CharField(max_length=30, blank=True)
     CAS = models.CharField(max_length=12, blank=True)
-    supp1 = models.CharField(max_length=100, blank=True)
-    suppID1 = models.CharField(max_length=100, blank=True)
-    supp2 = models.CharField(max_length=100, blank=True)
-    suppID2 = models.CharField(max_length=100, blank=True)
-    supp3 = models.CharField(max_length=100, blank=True)
-    suppID3 = models.CharField(max_length=100, blank=True)
+    supplier = models.CharField(max_length=100, blank=True)
+    supplierID = models.CharField(max_length=100, blank=True)
+    altsupplier = models.CharField(max_length=100, blank=True)
+    altsupplierID = models.CharField(max_length=100, blank=True)
     SMILES = models.CharField(max_length=500, blank=True)
     RMW = models.FloatField(null=True, blank=True, verbose_name='MW, provided by supplier') # MW
     CMW = models.FloatField(null=True, blank=True, verbose_name='MW, calculated') # from SMILES calculated MW
@@ -38,7 +37,8 @@ class Molecule(models.Model):
     comment = models.TextField(blank=True, verbose_name='Comment')
     molfile = models.TextField(blank=True, verbose_name='MolFile')
     added = models.DateField(auto_now=True, auto_now_add=True) #automatically updates date and adds date upon creation
-    typeOfCompound = models.CharField(max_length=30, verbose_name='Type of compound')
+    molclass = models.CharField(max_length=30, verbose_name='Type of compound')
+    randomstring = models.CharField(max_length=10, blank=True)
     
     def __unicode__(self):
         return u'%s, %s' % (self.name, self.CAS)

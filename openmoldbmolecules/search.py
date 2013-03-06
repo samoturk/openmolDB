@@ -61,7 +61,7 @@ def properties_search(mollist, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, m
             ret.append(mol)
     return ret
 
-def id_search(cas, name, storageid, supplierid, supplier, chn, typeofcompound):
+def id_search(cas, name, storageid, supplierid, supplier, chn, molclass):
     if cas:
         #CAS should be unique, so no need for further filtering
         mols = Molecule.objects.filter(CAS__contains=cas)
@@ -73,12 +73,12 @@ def id_search(cas, name, storageid, supplierid, supplier, chn, typeofcompound):
         if storageid:
             mols = mols.filter(storageID__icontains=storageid)
         if supplierid:
-            mols = mols.filter(suppID1__icontains=supplierid)
+            mols = mols.filter(supplierID__icontains=supplierid)
         if supplier:
-            mols = mols.filter(supp1__icontains=supplier)
+            mols = mols.filter(supplier__icontains=supplier)
         if chn:
             mols = mols.filter(CHN__icontains=chn)
-        if typeofcompound:
-            mols = mols.filter(typeOfCompound__icontains=typeofcompound)
+        if molclass:
+            mols = mols.filter(molclass__icontains=molclass)
         return mols
     

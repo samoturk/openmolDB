@@ -6,3 +6,20 @@
 2013-02-07
 -added search by class
 -cosmetic changes
+
+2013-02-12
+-updated bootstrap
+-added login/logout functionality
+
+2013-02-13
+-changed license to BSD license
+
+2013-02-16
+-renamed names of some variables to be more descriptive
+
+2013-03-04
+-added addmols.py to support uploading
+-added upload of single molecule (not fully functional yet)
+
+2013-03-06
+-updated README and INSTALL

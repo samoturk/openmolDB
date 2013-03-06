@@ -1,9 +1,129 @@
 {% extends "base.html" %}
 {% block content %}
-<div>
-    <h1>Not implemented yet!</h1>
-    <h2>Please wait for new version of OpenMolDB.</h2>
-    
+
+{% if nogo %}
+<h2>Sorry, feature not enabled!</h2>
+
+{% else %}
+
+
+{% if logedin %}
+<div class="">
+<form class="form-horizontal" action="" method="post">
+{% csrf_token %}
+<button class="btn btn-info btn-mini" type="submit" value="logout" name="logout" >Log out, {{user.username}}.</button>
 </div>
+</form>
+</div>
+{% if single %}
+<section id="single">
+<div>
+<h2>Upload single molecule.</h2>
+<ul>
+<li>Name and SMILES are required.</li>
+<li>OpenMolDB automatically calculates properties from SMILES code.</li>
+</ul>
+<form class="form-horizontal" action="/upload/" method="post">
+{% csrf_token %}
+
+    <label class="control-label" for="SMILES" ><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr></strong></label>
+    <div class="controls">
+    {{form.smiles}}
+    </div>
+    
+    <label class="control-label" for="Name"><strong>Name:</strong></label>
+    <div class="controls row">
+    {{form.name}}
+    </div>
+    
+    <label class="control-label" for="altname"><strong>Alternate name:</strong></label>
+    <div class="controls row">
+    {{form.altname}}
+    </div>
+    
+    <label class="control-label" for="CAS"><strong><abbr title="Chemical Abstracts Service registry number">CAS:</abbr></strong></label>
+    <div class="controls row">
+    {{form.cas}}
+    </div>
+    
+    <label class="control-label" for="suppID"><strong>Supplier:</strong></label>
+    <div class="controls row">
+    {{form.supplier}}
+    </div>
+    
+    <label class="control-label" for="suppID"><strong>Supplier ID:</strong></label>
+    <div class="controls row">
+    {{form.supplierid}}
+    </div>
+    
+    <label class="control-label" for="molclass"><strong>Class:</strong></label>
+    <div class="controls row">
+    {{form.molclass}}
+    </div>
+    
+    <label class="control-label" for="amount"><strong>Amount:</strong></label>
+    <div class="controls row">
+    {{form.amount}}
+    </div>
+    
+    <label class="control-label" for="unit"><strong>Unit:</strong></label>
+    <div class="controls row">
+    {{form.unit}}
+    </div>
+    
+    <label class="control-label" for="comment"><strong>Comment:</strong></label>
+    <div class="controls row">
+    {{form.comment}}
+    </div>
+    
+    <div class="form-actions">
+    <div class="control-group">
+        <button class="btn btn-large btn-large btn-primary" type="submit" value="single" name="single">Submit</button>
+    </div>
+</div>
+</form>
+</div>
+</section>
+
+{% endif %}
+
+{% if table %}
+<section id="table">
+<div>
+<h2>Upload csv table.</h2>
+<ul>
+<li>OpenMolDB accepts comma seperated tables (.csv).</li>
+<li>Tables should be saved in "Excel dialect" with comma as filed delimiter and " as text delimiter.</li>
+</ul>
+<form class="form-horizontal" action="" method="post">
+{% csrf_token %}
+
+<div class="control-group">
+    <label class="control-label" for="uploadfile">Select a file to upload:</label>
+    <div class="controls">
+    {{fileform.fileform}} 
+    </div>
+    </div>
+<div class="form-actions">
+    <div class="control-group">
+        <button class="btn btn-large btn-large btn-primary" type="submit" value="table" name="table">Upload</button>
+    </div>
+</div>
+</form>
+</div>
+</section>
+{% endif %}
+{% else %}
+
+<div class="login">
+    <h2>Please login to submit entries or upload tables.</h2>
+    <a href="{{servername}}/login.html" class="btn btn-primary btn-large"><i class="icon-user"></i>Login</a>
+    <br>
+</div>
+
+{% endif %}
+</div>
+
+{% endif %}
 
 {% endblock %}

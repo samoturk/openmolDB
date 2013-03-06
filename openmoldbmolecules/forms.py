@@ -19,15 +19,20 @@ class SearchForm(forms.Form):
     cas = forms.CharField(required=False, max_length=12, widget=forms.TextInput(attrs={'class':'span2', 'placeholder':'xxxx-xx-x'}))
     supplier = forms.CharField(required=False, max_length=20, widget=forms.TextInput(attrs={'class':'span2', 'placeholder':'xxxxx'}))
     supplierid = forms.CharField(required=False, max_length=20, widget=forms.TextInput(attrs={'class':'span2', 'placeholder':'xxxxx'}))
-    typeOfCompound = forms.CharField(required=False, max_length=20, widget=forms.TextInput(attrs={'class':'span2', 'placeholder':'chemical'}))
+    molclass = forms.CharField(required=False, max_length=20, widget=forms.TextInput(attrs={'class':'span2', 'placeholder':'chemical'}))
 
-"""
-#This is implemented in views.py, since we don't need valid smiles for all searches
-    def clean_smiles(self):
-        smiles = self.cleaned_data['smiles']
-        try:
-            query = pybel.readstring("smi", smiles)
-            return smiles
-        except:
-            raise forms.ValidationError("Smiles: smiles code is not valid!")
-"""
+class SubmitSingle(forms.Form):
+    name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'span4', 'placeholder':'Benzene', 'required':''}))
+    smiles = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'span4', 'placeholder':'SMILES', 'required':''}))
+    altname = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'span4', 'placeholder':'Alt. name'}))
+    storageid = forms.CharField(required=False, max_length=10, widget=forms.TextInput(attrs={'class':'span2', 'placeholder':'xxxxx'}))
+    cas = forms.CharField(required=False, max_length=12, widget=forms.TextInput(attrs={'class':'span2', 'placeholder':'xxxx-xx-x'}))
+    supplier = forms.CharField(required=False, max_length=20, widget=forms.TextInput(attrs={'class':'span2', 'placeholder':'xxxxx'}))
+    supplierid = forms.CharField(required=False, max_length=20, widget=forms.TextInput(attrs={'class':'span2', 'placeholder':'xxxxx'}))
+    molclass = forms.CharField(required=False, max_length=20, widget=forms.TextInput(attrs={'class':'span2', 'placeholder':'chemical'}))
+    unit = forms.CharField(required=False, max_length=20, widget=forms.TextInput(attrs={'class':'span2', 'placeholder':'unit'}))
+    amount = forms.CharField(required=False, max_length=20, widget=forms.TextInput(attrs={'class':'span2', 'placeholder':'xx'}))
+    comment = forms.CharField(required=False, max_length=20, widget=forms.Textarea(attrs={'class':'span4', 'rows':'3', 'placeholder':'Comment'}))
+
+class UploadFileForm(forms.Form):
+    fileform  = forms.FileField(required=True)

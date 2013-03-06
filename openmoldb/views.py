@@ -1,16 +1,25 @@
 #!/usr/bin/python/
-from django.shortcuts import render, render_to_response, get_object_or_404
+from django.shortcuts import render, render_to_response, get_object_or_404, HttpResponseRedirect
 from openmoldbmolecules.models import Molecule
 from openmoldbmolecules.search import smiles_search, properties_search, id_search, smarts_search, fast_fp_search
-from openmoldbmolecules.forms import SearchForm
+from openmoldbmolecules.forms import SearchForm, SubmitSingle, UploadFileForm
 from openmoldbmolecules.pagination import get_page_wo_page
+from openmoldbmolecules.addmols import addsingle
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import auth
 from json import dumps
 from numpy import histogram, array
 import pybel
+import string
+import random
 #from django.http import HttpResponse 
 
-servername = "http://127.0.0.1:8000"
+servername = "http://127.0.0.1:8000" #Change to your server name
+
+logintoupload = True # Require login to upload
+uploadsingle = True # Option to upload single molecule
+uploadtable = True # Option to upload csv table with mols
+
 
 def home(request):
     #home page
@@ -24,7 +33,7 @@ def molecule(request, idnum):
         raise Http404()
     mol = get_object_or_404(Molecule, pk=idnum)
     quantity = str(mol.amount) + " " + str(mol.unit)
-    return render(request, 'molecule.html', {'servername':servername, 'mol':mol, 'molname':mol.name, 'smiles':mol.SMILES, 'cas':mol.CAS, 'name2':mol.name2, 'molfile':mol.molfile, 'mw':mol.CMW, 'chn':mol.CHN, 'hba':mol.HBA, 'hbd':mol.HBD, 'logp':mol.logP, 'tpsa':mol.tpsa, 'supp':mol.supp1, 'suppid':mol.suppID1, 'storage':mol.storageID, 'comm':mol.comment, 'quantity':quantity, 'added':mol.added})
+    return render(request, 'molecule.html', {'servername':servername, 'mol':mol, 'molname':mol.name, 'smiles':mol.SMILES, 'cas':mol.CAS, 'altname':mol.altname, 'molfile':mol.molfile, 'mw':mol.CMW, 'chn':mol.CHN, 'hba':mol.HBA, 'hbd':mol.HBD, 'logp':mol.logP, 'tpsa':mol.tpsa, 'supp':mol.supplier, 'suppid':mol.supplierID, 'storage':mol.storageID, 'comm':mol.comment, 'quantity':quantity, 'added':mol.added})
 
 def browse(request):
     mollist = Molecule.objects.all()
@@ -65,7 +74,7 @@ def search(request):
     supplierid = form.cleaned_data['supplierid']
     supplier = form.cleaned_data['supplier']
     cas = form.cleaned_data['cas']
-    typeofcompound = form.cleaned_data['typeOfCompound']
+    molclass = form.cleaned_data['molclass']
     if 'similarity' in request.GET:
         #similartiy search
         try:
@@ -78,7 +87,7 @@ def search(request):
                     smiles = str(form.cleaned_data['smiles'])
             query = pybel.readstring("smi", smiles)
             tanimoto = form.cleaned_data['tanimoto']
-            mollist = id_search(cas, name, storageid, supplierid, supplier, chn, typeofcompound)
+            mollist = id_search(cas, name, storageid, supplierid, supplier, chn, molclass)
             mollistsmiles = fast_fp_search(mollist, smiles, tanimoto)
             mollist = properties_search(mollistsmiles, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd)
             paginator = Paginator(mollist, 15)
@@ -110,7 +119,7 @@ def search(request):
                 except:
                     smarts = str(form.cleaned_data['smiles'])
             query = pybel.Smarts(smarts)
-            mollist = id_search(cas, name, storageid, supplierid, supplier, chn, typeofcompound)
+            mollist = id_search(cas, name, storageid, supplierid, supplier, chn, molclass)
             mollistsmart = smarts_search(mollist, smarts)
             mollist = properties_search(mollistsmart, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd)
             paginator = Paginator(mollist, 15)
@@ -133,7 +142,7 @@ def search(request):
             return render(request, 'search.html', {'servername':servername, 'error': error, 'form':form})
     elif 'properties' in request.GET:
         #properties and IDs search
-        mollist = id_search(cas, name, storageid, supplierid, supplier, chn, typeofcompound)
+        mollist = id_search(cas, name, storageid, supplierid, supplier, chn, molclass)
         if cas == '':
             mollist = properties_search(mollist, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd)
         
@@ -222,5 +231,74 @@ def statistics(request):
     return render(request, 'statistics.html', {'servername':servername, 'logpmw':logpmw, 'hbamw':hbamw, 'hbdmw':hbdmw, 'tpsamw':tpsamw, 'mwhist':mwhist, 'fsp3hist':fsp3hist, 'nrbhist':nrbhist, 'complexityhist':complexityhist, 'logphist':logphist, 'hbahist':hbahist, 'hbdhist':hbdhist, 'tpsahist':tpsahist})
 
 def upload(request):
-    return render(request, 'upload.html')
-
+    """
+    Upload form with user handling. Can enable/disable functionality with variables at the top of this file.
+    Set them to false to disable.
+    """
+    # TODO error handling
+    if 'logout' in request.POST:
+        # Log out the user
+        auth.logout(request)
+        return HttpResponseRedirect(servername + "/upload.html")
+    if 'single' in request.POST:
+        form = SubmitSingle(request.POST)
+        form.is_valid()
+        randomstring = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(6))
+        name = form.cleaned_data['name']
+        smiles = form.cleaned_data['smiles']
+        altname = form.cleaned_data['altname']
+        cas = form.cleaned_data['cas']
+        storageID = form.cleaned_data['storageid']
+        supplier = form.cleaned_data['supplier']
+        supplierID = form.cleaned_data['supplierid']
+        molclass = form.cleaned_data['molclass']
+        comment = form.cleaned_data['comment']
+        unit = form.cleaned_data['unit']
+        amount = form.cleaned_data['amount']
+        addsingle(name, altname, supplier, supplierID, storageID, unit, amount, cas, smiles, comment, molclass, randomstring)
+        try:
+            pass
+        except:
+            pass
+        return render(request, 'uploadresult.html', {'servername':servername, 'debugname':name, 'uploadid':randomstring})
+        
+    if uploadsingle == False and uploadtable == False:
+        return render(request, 'upload.html', {'servername':servername, 'nogo':'nogo'})
+    else:
+        if logintoupload == True and not request.user.is_authenticated():
+            form = SubmitSingle()
+            fileform = UploadFileForm()
+            return render(request, 'upload.html', {'servername':servername, 'form':form, 'fileform':fileform})
+        else:
+            form = SubmitSingle()
+            fileform = UploadFileForm()
+            return render(request, 'upload.html', {'servername':servername, 'logedin':'ok', 'single':uploadsingle, 'table':uploadtable, 'form':form, 'fileform':fileform})
+        
+def login(request):
+    """
+    Log in/ log out functionality
+    """
+    if 'logout' in request.POST:
+        auth.logout(request)
+        return HttpResponseRedirect(servername + "/upload.html")
+    if request.user.is_authenticated():
+        return render(request, 'login.html', {'servername':servername, 'logout':'logout'})
+    else:
+        if 'login' in request.POST:
+            username = request.POST['username']
+            password = request.POST['password']
+            user = auth.authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    auth.login(request, user)
+                    return HttpResponseRedirect(servername + "/upload.html")
+            # Redirect to a success page.
+                else:
+                    pass #TODO
+            # Return a 'disabled account' error message
+            else:
+                pass #TODO
+        else:
+            return render(request, 'login.html', {'servername':servername})
+        # Return an 'invalid login' error message.
+    

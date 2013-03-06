@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from openmoldb.views import home, molecule, browse, search, statistics, upload
+from openmoldb.views import home, molecule, browse, search, statistics, upload, login
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url(r'^search', search),
     url(r'^stats', statistics),
     url(r'^upload', upload),
+    url(r'^login', login),
     # Examples:
     # url(r'^$', 'openmoldb.views.home', name='home'),
     # url(r'^openmoldb/', include('openmoldb.foo.urls')),
