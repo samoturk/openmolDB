@@ -18,12 +18,12 @@ var hideall = function(){
 }
 $(document).ready(function(){
 hideall();
-$("#MolecularWeight").show("slow");
+$("#MolecularWeight").slideDown();
 
 $("#MWlink").click(function () {
 hideall();
 if ($("#MolecularWeight").is(":hidden")) {
-        $("#MolecularWeight").show("slow");
+        $("#MolecularWeight").slideDown();
       } else {
         $("#MolecularWeight").slideUp();
 }
@@ -32,7 +32,7 @@ if ($("#MolecularWeight").is(":hidden")) {
 $("#nrblink").click(function () {
 hideall();
 if ($("#nrb").is(":hidden")) {
-        $("#nrb").show("slow");
+        $("#nrb").slideDown();
       } else {
         $("#nrb").slideUp();
 }
@@ -41,7 +41,7 @@ if ($("#nrb").is(":hidden")) {
 $("#fsp3link").click(function () {
 hideall();
 if ($("#fsp3").is(":hidden")) {
-        $("#fsp3").show("slow");
+        $("#fsp3").slideDown();
       } else {
         $("#fsp3").slideUp();
 }
@@ -50,7 +50,7 @@ if ($("#fsp3").is(":hidden")) {
 $("#complexitylink").click(function () {
 hideall();
 if ($("#complexity").is(":hidden")) {
-        $("#complexity").show("slow");
+        $("#complexity").slideDown();
       } else {
         $("#complexity").slideUp();
 }
@@ -60,7 +60,7 @@ if ($("#complexity").is(":hidden")) {
 $("#LogPlink").click(function () {
 hideall();
 if ($("#LogP").is(":hidden")) {
-        $("#LogP").show("slow");
+        $("#LogP").slideDown();
       } else {
         $("#LogP").slideUp();
 }
@@ -69,7 +69,7 @@ if ($("#LogP").is(":hidden")) {
 $("#HBDlink").click(function () {
 hideall();
 if ($("#HBD").is(":hidden")) {
-        $("#HBD").show("slow");
+        $("#HBD").slideDown();
       } else {
         $("#HBD").slideUp();
 }
@@ -78,7 +78,7 @@ if ($("#HBD").is(":hidden")) {
 $("#HBAlink").click(function () {
 hideall();
 if ($("#HBA").is(":hidden")) {
-        $("#HBA").show("slow");
+        $("#HBA").slideDown();
       } else {
         $("#HBA").slideUp();
 }
@@ -87,7 +87,7 @@ if ($("#HBA").is(":hidden")) {
 $("#TPSAlink").click(function () {
 hideall();
 if ($("#TPSA").is(":hidden")) {
-        $("#TPSA").show("slow");
+        $("#TPSA").slideDown();
       } else {
         $("#TPSA").slideUp();
 }
@@ -104,68 +104,67 @@ if ($("#TPSA").is(":hidden")) {
 
 
 
-<div class="tabbable tabs-top">
-<ul class="nav nav-tabs">
-    <li id="MWlink"><a><i class="icon-caret-right"></i> MW</a></li>
-    <li id="nrblink"><a><i class="icon-caret-right"></i> Rot. bonds</a></li>
-    <li id="fsp3link"><a><i class="icon-caret-right"></i> Fsp3</a></li>
-    <li id="complexitylink"><a><i class="icon-caret-right"></i> Complex</a></li>
-    <li id="LogPlink"><a><i class="icon-caret-right"></i> LogP</a></li>
-    <li id="HBDlink"><a><i class="icon-caret-right"></i> H-bond donors</a></li>
-    <li id="HBAlink"><a><i class="icon-caret-right"></i> H-bond acceptors</a></li>
-    <li id="TPSAlink"><a><i class="icon-caret-right"></i> TPSA</a></li>
-</ul>
+<div class="row">
+<dl class="sub-nav left">
+    <dd id="MWlink"><a class="button small secondary"><i class="icon-caret-right"></i> MW</a></dd>
+    <dd id="nrblink"><a class="button small secondary"><i class="icon-caret-right"></i> Rot. bonds</a></dd>
+    <dd id="fsp3link"><a class="button small secondary"><i class="icon-caret-right"></i> Fsp3</a></dd>
+    <dd id="complexitylink"><a class="button small secondary"><i class="icon-caret-right"></i> Complex</a></dd>
+    <dd id="LogPlink"><a class="button small secondary"><i class="icon-caret-right"></i> LogP</a></dd>
+    <dd id="HBDlink"><a class="button small secondary"><i class="icon-caret-right"></i> H-bond donors</a></dd>
+    <dd id="HBAlink"><a class="button small secondary"><i class="icon-caret-right"></i> H-bond acceptors</a></dd>
+    <dd id="TPSAlink"><a class="button small secondary"><i class="icon-caret-right"></i> TPSA</a></li>
+</dl>
 </div>
 
-<section id="MolecularWeight">
+<section id="MolecularWeight" style="display: none" class="row">
     <h3>Molecular weight</h3>
     <div id="mwhist" style="height:300px; width:650px;"></div>
 </section>
 
-<section id="nrb">
+<section id="nrb" style="display: none" class="row">
     <h3>Number of rotatable bonds</h3>
     <div id="nrbhist" style="height:300px; width:650px;"></div>
 </section>
 
-<section id="fsp3">
+<section id="fsp3" style="display: none" class="row">
     <h3>Fraction of sp3 carbons</h3>
     <p>Fraction od sp3 carbons is calculated as (#sp3 carbons)/(#all carbons).</p>
     <div id="fsp3hist" style="height:300px; width:650px;"></div>
 </section>
 
-<section id="complexity">
+<section id="complexity" style="display: none" class="row">
     <h3>Molecular complexity</h3>
     <p>Molecular complexity is calculated as number of bits set to ON in molecular fingerprint.</p>
     <div id="complexityhist" style="height:300px; width:650px;"></div>
 </section>
 
-<section id="LogP">
+<section id="LogP" style="display: none" class="row">
     <h3>LogP</h3>
     <div id="logpscat" style="height:300px; width:650px;"></div>
     <div id="logphist" style="height:300px; width:650px;"></div>
 </section>
 
-<section id="HBD">
+<section id="HBD" style="display: none" class="row">
     <h3>H-bond donors</h3>
     <div id="hbdscat" style="height:300px; width:650px;"></div>
     <div id="hbdhist" style="height:300px; width:650px;"></div>
 </section>
 
-<section id="HBA">
+<section id="HBA" style="display: none" class="row">
     <h3>H-bond acceptors</h3>
     <div id="hbascat" style="height:300px; width:650px;"></div>
     <div id="hbahist" style="height:300px; width:650px;"></div>
 </section>
 
-<section id="TPSA">
+<section id="TPSA" style="display: none" class="row">
     <h3>Polar surface area</h3>
     <div id="tpsascat" style="height:300px; width:650px;"></div>
     <div id="tpsahist" style="height:300px; width:650px;"></div>
 </section>
 </div>
-</div>
 
-<script class="code" type="text/javascript">
+<script class="code" type="text/javascript" >
 var mwhist = {{mwhist|safe}};
 $(document).ready(function() {
     $.plot($("#mwhist"), [mwhist], {
@@ -609,6 +608,5 @@ $(document).ready(function() {
 
 </script>
 
-</div>
 
 {% endblock %}

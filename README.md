@@ -16,7 +16,7 @@ This project wouldn't be possible without these excellent open source projects:
 * jQuery - javascript library
 * ChemDoodle Web - javascript chemical library, which handles the displayand drawing of chemical structures
 * Flot - jQuery plugin for plotting
-* Twitter Bootstrap - CSS style
+* Foundation - CSS style
 * Font Awesome
 
 ## What does not work

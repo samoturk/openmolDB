@@ -27,3 +27,7 @@
 2013-03-12
 -removed redundant js and updated bootstrap and chemdoole web
 
+2013-03-16
+-replaced Bootstrap with Foundation, unfortunately it still doesn't fix broken
+search page in Chrome
+

@@ -1,31 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
-<section id="MainPage">
-    <div class="hero-unit">
+<header class="panel">
+    <div class="row">
+    <div class="twelve columns header">
         <h1>Search compounds and chemicals</h1>
         <p>With OpenMolDB you can search compounds and chemicals by sub-structure, similarity, properties, names, suppliers and IDs!</p>
         <p>
-            <a href="{{servername}}/search.html" class="btn btn-primary btn-large"><i class="icon-search"></i> Search!</a>
+            <a href="{{servername}}/search.html" class="button"><i class="icon-search"></i> Search!</a>
         </p>
     </div>
-    <hr>
+    </div>
+</header>
+<section id="mainContent">
     <div class="row">
-    <div class="span4">
+    <div class="columns">
         <h4>Do you just want to casually browse the database? No problem!</h4>
         <p>
-            <a href="{{servername}}/browse.html" class="btn btn-primary btn-large"><i class="icon-list-alt"></i> Browse!</a>
+            <a href="{{servername}}/browse.html" class="button"><i class="icon-list-alt"></i> Browse!</a>
         </p>
     </div>
-    <div class="span4">
+    <div class="columns">
         <h4>Curious about the properties of compounds in the databse? Have a look!</h4>
         <p>
-            <a href="{{servername}}/stats.html" class="btn btn-primary btn-large"><i class="icon-bar-chart"></i> Statistics!</a>
+            <a href="{{servername}}/stats.html" class="button"><i class="icon-bar-chart"></i> Statistics!</a>
         </p>
     </div>
-
     </div>
-    <div>
-    
 </section>
-</div>
+    </div>
+
 {% endblock %}

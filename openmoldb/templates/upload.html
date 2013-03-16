@@ -11,12 +11,14 @@
 <div class="">
 <form class="form-horizontal" action="" method="post">
 {% csrf_token %}
-<button class="btn btn-info btn-mini" type="submit" value="logout" name="logout" >Log out, {{user.username}}.</button>
+<button class="button tiny" type="submit" value="logout" name="logout" >Log out, {{user.username}}.</button>
 </div>
 </form>
 </div>
+
 {% if single %}
-<section id="single">
+
+<section id="single" class="row">
 <div>
 <h2>Upload single molecule.</h2>
 <ul>
@@ -26,59 +28,99 @@
 <form class="form-horizontal" action="/upload/" method="post">
 {% csrf_token %}
 
-    <label class="control-label" for="SMILES" ><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr></strong></label>
-    <div class="controls">
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="SMILES" ><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES: </abbr></strong></label>
+    </div>
+    <div class="large-6 columns left">
     {{form.smiles}}
     </div>
+    </div>
     
-    <label class="control-label" for="Name"><strong>Name:</strong></label>
-    <div class="controls row">
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="Name"><strong>Name:</strong></label>
+    </div>
+    <div class="large-3 columns left">
     {{form.name}}
     </div>
+    </div>
     
-    <label class="control-label" for="altname"><strong>Alternate name:</strong></label>
-    <div class="controls row">
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="Name"><strong>Alternate name:</strong></label>
+    </div>
+    <div class="large-3 columns left">
     {{form.altname}}
     </div>
+    </div>
     
-    <label class="control-label" for="CAS"><strong><abbr title="Chemical Abstracts Service registry number">CAS:</abbr></strong></label>
-    <div class="controls row">
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="CAS"><strong><abbr title="Chemical Abstracts Service registry number">CAS:</abbr></strong></label>
+    </div>
+    <div class="large-3 columns left">
     {{form.cas}}
     </div>
+    </div>
     
-    <label class="control-label" for="suppID"><strong>Supplier:</strong></label>
-    <div class="controls row">
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="suppID"><strong>Supplier:</strong></label>
+    </div>
+    <div class="large-3 columns left">
     {{form.supplier}}
     </div>
+    </div>
     
-    <label class="control-label" for="suppID"><strong>Supplier ID:</strong></label>
-    <div class="controls row">
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="suppID"><strong>Supplier ID:</strong></label>
+    </div>
+    <div class="large-3 columns left">
     {{form.supplierid}}
     </div>
+    </div>
     
-    <label class="control-label" for="molclass"><strong>Class:</strong></label>
-    <div class="controls row">
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="molclass"><strong>Class:</strong></label>
+    </div>
+    <div class="large-3 columns left">
     {{form.molclass}}
     </div>
+    </div>
     
-    <label class="control-label" for="amount"><strong>Amount:</strong></label>
-    <div class="controls row">
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="molclass"><strong>Amount:</strong></label>
+    </div>
+    <div class="large-3 columns left">
     {{form.amount}}
     </div>
-    
-    <label class="control-label" for="unit"><strong>Unit:</strong></label>
-    <div class="controls row">
-    {{form.unit}}
     </div>
     
-    <label class="control-label" for="comment"><strong>Comment:</strong></label>
-    <div class="controls row">
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="molclass"><strong>Unit:</strong></label>
+    </div>
+    <div class="large-3 columns left">
+    {{form.unit}}
+    </div>
+    </div>
+    
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="molclass"><strong>Comment:</strong></label>
+    </div>
+    <div class="large-3 columns left">
     {{form.comment}}
+    </div>
     </div>
     
     <div class="form-actions">
     <div class="control-group">
-        <button class="btn btn-large btn-large btn-primary" type="submit" value="single" name="single">Submit</button>
+        <button class="button" type="submit" value="single" name="single">Submit</button>
     </div>
 </div>
 </form>
@@ -88,12 +130,12 @@
 {% endif %}
 
 {% if table %}
-<section id="table">
+<section id="table" class="row">
 <div>
 <h2>Upload csv table.</h2>
 <ul>
 <li>OpenMolDB accepts comma seperated tables (.csv).</li>
-<li>Tables should be saved in "Excel dialect" with comma as filed delimiter and " as text delimiter.</li>
+<li>Tables should be saved in "Excel dialect" with comma as field delimiter and " as text delimiter.</li>
 </ul>
 <form class="form-horizontal" action="" method="post">
 {% csrf_token %}
@@ -106,7 +148,7 @@
     </div>
 <div class="form-actions">
     <div class="control-group">
-        <button class="btn btn-large btn-large btn-primary" type="submit" value="table" name="table">Upload</button>
+        <button class="button" type="submit" value="table" name="table">Upload</button>
     </div>
 </div>
 </form>

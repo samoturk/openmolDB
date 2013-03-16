@@ -6,7 +6,7 @@ $(document).ready(function(){
 $("#info").slideUp();
 $("#infobutton").click(function () {
 if ($("#info").is(":hidden")) {
-        $("#info").show("slow");
+        $("#info").slideDown();
     } else {
         $("#info").slideUp();
 }
@@ -30,31 +30,33 @@ $("#alert").click(function () {
 
 <script type="text/javascript" src="{{servername}}/static/js/sketcher/ChemDoodleWeb-sketcher.js"></script>
 
-<section id="search">
-    <button class="btn btn-info" id="infobutton"><i class="icon-question-sign"></i> How to use this form.</button>
-    <div class="alert alert-info" id="info">
-    <ul>
+    <button class="button tiny" id="infobutton"><i class="icon-question-sign"></i> How to use this form</button>
+    <div class="alert-box" id="info" style="display: none">
+    <ul class="row">
     <li>You can either draw a structure in structure editor or input SMILES/SMARTS.</li>
-    <li>If you choose to use editor, you have to click "Get mol file" prior form submission.</li>
-    <li>For more advanced substructure search use of <a href="http://www.daylight.com/dayhtml/doc/theory/theory.smarts.html">SMARTS</a> is recommended.</li>
+    <li>If you choose to use editor, you have to click "Get structure from editor" after you have finished drawing.</li>
+    <li>For more advanced substructure search use of SMARTS is recommended.</li>
     </ul>
     </div>
-    <hr>
     {% if error %}
-    <div class="alert alert-error" id="alert">
-    <button type="button" class="close alert" id="alert" data-dismiss="alert">&times;</button>
-    <strong>Error in submitted data!</strong> 
+    <div class="alert-box alert" id="alert">
+    <a type="button" class="close" id="alert" data-dismiss="alert" href="#">&times;</a>
+    <dl class="row">
+    <dt class="row">Error in submitted data!</dt>
+
     {% for e in error %}
-    <p>{{e}}</p>
+    <dd>{{e}}</dd>
     {% endfor %}
+    </dl>
     </div>
     {% endif %}
 
+<section id="search" class="row">
 <form class="form-horizontal" action="/search/" method="get">
+<fieldset>
+    <legend for="sketcher"><strong>Structure editor</strong></legend>
     
-<label class="control-label" for="sketcher"><strong>Structure editor</strong></label>
-
-<div class=controls name=sketcher>
+    <div class="controls" name="sketcher">
 
 <script type="text/javascript">
 ChemDoodle.ELEMENT['H'].jmolColor = 'black';
@@ -65,104 +67,168 @@ sketcher.specs.atoms_useJMOLColors = true;
 sketcher.specs.bonds_clearOverlaps_2D = true;
 sketcher.specs.bonds_overlapClearWidth_2D = 2;
 sketcher.repaint();
-function submitform()
+function getmol()
 {
     var mol = sketcher.getMolecule();
     var mol2 = ChemDoodle.writeMOL(mol);
     document.getElementById('id_moltext').value = mol2;
+    $("#molfromeditor").css('backgroundColor','#5da423');
 }
 </script>
-</div>
-<label class="control-label" for="moltext" >
-<strong><input class="btn btn-link" name="Submitmol" value="Get mol file" onclick="javascript:submitform()"/></strong>
-</label>
-<div class="controls">
-{{form.moltext}}
-</div>
-<hr>
-    <label class="control-label" for="SMILES" ><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr>/</strong><strong><abbr title="SMiles ARbitrary Target Specification">SMARTS</abbr></strong></label>
-    <div class="controls">
+    </div>
+    <input class="button small" name="molfromeditor" id="molfromeditor" value="Get structure from editor" onclick="javascript:getmol()"/>
+    <div class="controls" style="display: none">
+    {{form.moltext}}
+    </div>
+
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="SMILES" ><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr>/</strong><strong><abbr title="SMiles ARbitrary Target Specification"> SMARTS</abbr></strong></label>
+    </div>
+    <div class="large-6 columns left">
     {{form.smiles}}
     </div>
-    <label class="control-label" for="tanimoto"><strong>Tanimoto</strong></label>
-    <div class="controls">
+    </div>
+    
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="tanimoto"><strong>Tanimoto</strong></label>
+    </div>
+    <div class="large-1 columns left">
     {{form.tanimoto}}
     </div>
-    <hr>
-    <h4>Properties (min./max.)</h4>
-    <label class="control-label" for="MW"><strong>Molecular weight:</strong></label>
-    <div class="controls row">
-    {{form.minmw}}
-    {{form.maxmw}}
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>Properties (min./max.)</legend>
+    
+    <div class="row">
+        <div class="large-1 columns">
+        <label for="MW"><strong>Molecular weight:</strong></label>
+        </div>
+        <div class="large-1 columns left">
+        {{form.minmw}}
+        </div>
+        <div class="large-1 columns left">
+        {{form.maxmw}}
+        </div>
     </div>
     
-    <label class="control-label" for="MinLogP"><strong>LogP:</strong></label>
-    <div class="controls row">
-    {{form.minlogp}}
-    {{form.maxlogp}}
+    <div class="row">
+        <div class="large-1 columns">
+        <label for="MinLogP"><strong>LogP:</strong></label>
+        </div>
+        <div class="large-1 columns left">
+        {{form.minlogp}}
+        </div>
+        <div class="large-1 columns left">
+        {{form.maxlogp}}
+        </div>
     </div>
     
-    <label class="control-label" for="MinHBD"><strong>H-bond donors:</strong></label>
-    <div class="controls row">
+    <div class="row">
+        <div class="large-1 columns">
+    <label for="MinHBD"><strong>H-bond donors:</strong></label>
+            </div>
+        <div class="large-1 columns left">
     {{form.minhba}}
+    </div>
+        <div class="large-1 columns left">
     {{form.maxhba}}
     </div>
+    </div>
     
-    <label class="control-label" for="MinHBA"><strong>H-bond acceptors:</strong></label>
-    <div class="controls row">
+    <div class="row">
+        <div class="large-1 columns">
+    <label for="MinHBA"><strong>H-bond acceptors:</strong></label>
+            </div>
+        <div class="large-1 columns left">
     {{form.minhbd}}
+    </div>
+        <div class="large-1 columns left">
     {{form.maxhbd}}
     </div>
-    
-    <br>
-    <label class="control-label" for="MinHBA"><strong>Molecular formula:</strong></label>
-    <div class="controls row">
-    {{form.chn}}
     </div>
     
-    <hr>
-    <h4>Names and IDs</h4>
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="MinHBA"><strong>Molecular formula:</strong></label>
+    </div>
     
-    <label class="control-label" for="Storage"><strong>StorageID:</strong></label>
-    <div class="controls row">
+    <div class="large-2 columns left">
+    {{form.chn}}
+    <div>
+    </div>
+</fieldset>
+    
+<fieldset>
+    <legend>Names and IDs</legend>
+    
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="Storage"><strong>StorageID:</strong></label>
+    </div>
+    <div class="large-3 columns left">
     {{form.storageid}}
     </div>
+    </div>
     
-    <label class="control-label" for="CAS"><strong><abbr title="Chemical Abstracts Service registry number">CAS:</abbr></strong></label>
-    <div class="controls row">
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="CAS"><strong><abbr title="Chemical Abstracts Service registry number">CAS:</abbr></strong></label>
+    </div>
+    <div class="large-3 columns left">
     {{form.cas}}
     </div>
+    </div>
     
-    <label class="control-label" for="Name"><strong>Name:</strong></label>
-    <div class="controls row">
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="Name"><strong>Name:</strong></label>
+    </div>
+    <div class="large-3 columns left">
     {{form.name}}
     </div>
+    </div>
     
-    <label class="control-label" for="suppID"><strong>Supplier:</strong></label>
-    <div class="controls row">
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="suppID"><strong>Supplier:</strong></label>
+    </div>
+    <div class="large-3 columns left">
     {{form.supplier}}
     </div>
+    </div>
     
-    <label class="control-label" for="suppID"><strong>Supplier ID:</strong></label>
-    <div class="controls row">
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="suppID"><strong>Supplier ID:</strong></label>
+    </div>
+    <div class="large-3 columns left">
     {{form.supplierid}}
     </div>
+    </div>
     
-    <label class="control-label" for="molclass"><strong>Class:</strong></label>
-    <div class="controls row">
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="molclass"><strong>Class:</strong></label>
+    </div>
+    <div class="large-3 columns left">
     {{form.molclass}}
     </div>
+    </div>
     
+</fieldset>
     <div class="control-group">
     <div class="form-actions">
-    <input type="submit" class="btn btn-primary" name="similarity" value="Similarity">
-    <input type="submit" class="btn btn-primary" name="substructure" value="Substructure">
-    <input type="submit" class="btn btn-primary" name="properties" value="Only properties and IDs">
+    <input type="submit" class="button" name="similarity" value="Similarity">
+    <input type="submit" class="button" name="substructure" value="Substructure">
+    <input type="submit" class="button" name="properties" value="Only properties and IDs">
     </div>
     </div>
-    </form>
+</form>
 
 </section>
-</div>
 
 {% endblock %}

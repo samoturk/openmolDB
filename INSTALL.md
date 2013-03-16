@@ -4,7 +4,7 @@ OpenMolDB should run on any OS that can run Django 1.4.x.
 It was tested on current version of Arch Linux and Arch Linux ARM (yes it runs on Raspberry Pi)
 
 * Python 2.7.x or 2.6.x
-* Django 1.4.x
+* Django 1.4.x or 1.5.x
 * OpenBabel 2.3.x with Python bindings
 * Any database supported by Django
 * Any web server that can run Django
