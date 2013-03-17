@@ -56,7 +56,7 @@ $("#alert").click(function () {
 <fieldset>
     <legend for="sketcher"><strong>Structure editor</strong></legend>
     
-    <div class="controls" name="sketcher">
+    <div class="row" name="sketcher">
 
 <script type="text/javascript">
 ChemDoodle.ELEMENT['H'].jmolColor = 'black';
@@ -75,12 +75,12 @@ function getmol()
     $("#molfromeditor").css('backgroundColor','#5da423');
 }
 </script>
-    </div>
-    <input class="button small" name="molfromeditor" id="molfromeditor" value="Get structure from editor" onclick="javascript:getmol()"/>
-    <div class="controls" style="display: none">
+    <p><input class="button small" name="molfromeditor" id="molfromeditor" value="Get structure from editor" onclick="javascript:getmol()"/></p>
+    <div style="display: none">
     {{form.moltext}}
     </div>
-
+    </div>
+    
     <div class="row">
     <div class="large-1 columns">
     <label for="SMILES" ><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr>/</strong><strong><abbr title="SMiles ARbitrary Target Specification"> SMARTS</abbr></strong></label>

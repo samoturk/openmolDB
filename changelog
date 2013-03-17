@@ -31,3 +31,6 @@
 -replaced Bootstrap with Foundation, unfortunately it still doesn't fix broken
 search page in Chrome
 
+2013-03-17
+-cleaned up the design, molecular data is now in tables
+

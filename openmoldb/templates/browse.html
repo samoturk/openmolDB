@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{{servername}}/static/js/ChemDoodleWeb.css" />
+
 <script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb-libs.js"></script>
 <script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb.js"></script>
 {% if mollist.has_previous %}
@@ -11,11 +13,14 @@
 {% endif %}
 
 {% for mol in mollist %}
+
 <div id="mol{{mol.id}}" class="row">
-        <a href="{{servername}}/molecule/{{mol.id}}"><h2><i class="icon-beaker"></i> {{mol.name}}</h2></a>
-        <div class="small-2 large-3 columns">
+    <fieldset>
+        <legend><a href="{{servername}}/molecule/{{mol.id}}"><h3><i class="icon-beaker"></i> {{mol.name}}</h3></a></legend>
+        <div class=row>
+        <div class="large-2 columns">
             <script>
-            var viewACS = new ChemDoodle.ViewerCanvas('{{mol.id}}', 100, 100);
+            var viewACS = new ChemDoodle.ViewerCanvas('{{mol.id}}', 150, 150);
             viewACS.specs.bonds_width_2D = .6;
             viewACS.specs.bonds_saturationWidth_2D = .18;
             viewACS.specs.bonds_hashSpacing_2D = 2.5;
@@ -27,26 +32,48 @@
             caffeine.scaleToAverageBondLength(14.4);
             viewACS.loadMolecule(caffeine);
             </script>
-            <p><strong><abbr title="Chemical Abstracts Service registry number">CAS:</abbr></strong> {{mol.CAS}}</p>
-            <p><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr>:</strong> {{mol.SMILES}}</p>
+            
         </div>
-        <div class="small-2 large-3 columns">
-            <h4>Properties</h4>
-            <p><strong><abbr title="Molecular weight">MW:</abbr></strong> {{mol.CMW|floatformat:3}}</p>
-            <p><strong>Brutto formula:</strong> {{mol.CHN}}</p>
+        <div class="large-9 columns left">
+        <table>
+        <thead>
+            <tr>
+            <th><abbr title="Molecular weight">MW</abbr></th>
+            <th><abbr title="Hydrogen bond acceptors">HBA</abbr></th>
+            <th><abbr title="Hydrogen bond donors">HBD</abbr></th>
+            <th><abbr title="Logarithm of partition coefficient">LogP</abbr></th>
+            <th>CAS</th>
+            <th>Suppliers</th>
+            <th>Supplier IDs</th>
+            <th>Storage ID</th>
+            <th>Quantity</th>
+            <th>Class</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <td>{{mol.CMW|floatformat:2}}</td>
+            <td>{{mol.HBA}}</td>
+            <td>{{mol.HBD}}</td>
+            <td>{{mol.logP|floatformat:2}}</td>
+            <td>{{mol.CAS}}</td>
+            <td>{{mol.supplier}}</td>
+            <td>{{mol.supplierID}}</td>
+            <td>{{mol.storageID}}</td>
+            <td>{{mol.amount}} {{mol.unit}}</td>
+            <td>{{mol.molclass}}</td>
+            </tr>
+        </tbody>
+        </table>
+        <p><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr>:</strong> {{mol.SMILES}}</p>
         </div>
-        <div class="small-2 large-4 columns left">
-            <h4>Availability</h4>
-            <p><strong>Supplier and code:</strong> {{mol.supplier}}; {{mol.supplierID}}</p>
-            <p><strong>Storage ID:</strong> {{mol.storageID}}</p>
-            <p><strong>Quantity:</strong> {{mol.amount}} {{mol.unit}}</p>
         </div>
+    </fieldset>
 </div>
-<hr>
 {% endfor %}
-
+    <div class=row>
     <div class="pagination">
-    <ul class="row">
+    <ul class="pagination">
         {% if mollist.has_previous %}
             <li class="arrow"><a href="{{currentpath}}page={{ mollist.previous_page_number }}">&laquo;</a></li>
         {% else %}
@@ -66,6 +93,7 @@
         {% endif %}
         
     </ul>
+    </div>
     </div>
 
 </div>

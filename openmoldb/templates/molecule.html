@@ -1,58 +1,104 @@
 {% extends "base.html" %}
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{{servername}}/static/js/ChemDoodleWeb.css" />
+
 <script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb-libs.js"></script>
 <script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb.js"></script>
 
-<section id="molecule">
-        <h1><i class="icon-beaker"></i> {{mol.name}}</h1>
-        <div class=row>
-        <div class=span4>
-        <p>
-        <script>
-    var viewACS = new ChemDoodle.ViewerCanvas('viewACS', 200, 200);
-    viewACS.specs.bonds_width_2D = 1.2;
-    viewACS.specs.bonds_saturationWidth_2D = .36;
-    viewACS.specs.bonds_hashSpacing_2D = 5;
-    viewACS.specs.atoms_font_size_2D = 12;
-    viewACS.specs.atoms_font_families_2D = ['Helvetica', 'Arial', 'sans-serif'];
-    viewACS.specs.atoms_displayTerminalCarbonLabels_2D = true;
-    var MolFile = '{{mol.molfile}}';
-    var Mol = ChemDoodle.readMOL(MolFile);
-    Mol.scaleToAverageBondLength(18);
-    viewACS.loadMolecule(Mol);
-</script>
-        </p>
-            <p><strong><abbr title="Chemical Abstracts Service registry number">CAS:</strong></abbr> {{mol.CAS}}</p>
-            <p><strong>Other names:</strong> {{mol.altname}}</p>
-            <p><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr>:</strong> {{mol.SMILES}}</p>
 
+<section id="molecule">
+    <div class="row">
+        <h1><i class="icon-beaker"></i> {{mol.name}}</h1>
+    </div>
+    
+    <div class=row>
+        <div class="large-3 columns">
+            <script>
+            var viewACS = new ChemDoodle.ViewerCanvas('viewACS', 200, 200);
+            viewACS.specs.bonds_width_2D = 1.2;
+            viewACS.specs.bonds_saturationWidth_2D = .36;
+            viewACS.specs.bonds_hashSpacing_2D = 5;
+            viewACS.specs.atoms_font_size_2D = 12;
+            viewACS.specs.atoms_font_families_2D = ['Helvetica', 'Arial', 'sans-serif'];
+            viewACS.specs.atoms_displayTerminalCarbonLabels_2D = true;
+            var MolFile = '{{mol.molfile}}';
+            var Mol = ChemDoodle.readMOL(MolFile);
+            Mol.scaleToAverageBondLength(18);
+            viewACS.loadMolecule(Mol);
+            </script>
         </div>
-        <div class=span3>
+        <div class="large-5 columns left">
+            <dl>
+            <dd><strong><abbr title="Chemical Abstracts Service registry number">CAS</abbr>:</strong>{{mol.CAS}}</dd>
+            <dd><strong>Other names:</strong> {{mol.altname}}</dd>
+            <dd><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr>:</strong> {{mol.SMILES}}</dd>
+            </dl>
+        </div>
+        </div>
+        
+        <div class="row">
             <h4>Properties</h4>
-            <p><strong><abbr title="Molecular weight">MW</abbr>:</strong> {{mol.CMW|floatformat:3}}</p>
-            <p><strong><abbr title="Hydrogen bond acceptors">HBA</abbr>:</strong> {{mol.HBA}}</p>
-            <p><strong><abbr title="Hydrogen bond donors">HBD</abbr>:</strong> {{mol.HBD}}</p>
-            <p><strong><abbr title="Logarithm of partition coefficient">LogP</abbr>:</strong> {{mol.logP|floatformat:3}}</p>
-            <p><strong><abbr title="Topological polar surface area">TPSA</abbr>:</strong> {{mol.tpsa}}</p>
-            <p><strong>Rotatable bonds:</strong> {{mol.nrb}}</p>
-            <p><strong>Complexity:</strong> {{mol.complexity}}</p>
-            <p><strong><abbr title="Fraction of sp3 carbons">Fsp3</abbr>:</strong> {{mol.fsp3|floatformat:3}}</p>
-            <p><strong>Brutto formula:</strong> {{mol.CHN}}</p>
+        <table>
+        <thead>
+            <tr>
+            <th><abbr title="Molecular weight">MW</abbr></th>
+            <th><abbr title="Hydrogen bond acceptors">HBA</abbr></th>
+            <th><abbr title="Hydrogen bond donors">HBD</abbr></th>
+            <th><abbr title="Logarithm of partition coefficient">LogP</abbr></th>
+            <th><abbr title="Topological polar surface area">TPSA</abbr></th>
+            <th><abbr title="Rotatable bonds">Rot.</abbr></th>
+            <th><abbr title="Complexity">Comp.</abbr></th>
+            <th><abbr title="Fraction of sp3 carbons">Fsp3C</abbr></th>
+            <th>Brutto formula</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <td>{{mol.CMW|floatformat:2}}</td>
+            <td>{{mol.HBA}}</td>
+            <td>{{mol.HBD}}</td>
+            <td>{{mol.logP|floatformat:2}}</td>
+            <td>{{mol.tpsa}}</td>
+            <td>{{mol.nrb}}</td>
+            <td>{{mol.complexity}}</td>
+            <td>{{mol.fsp3|floatformat:2}}</td>
+            <td>{{mol.CHN}}</td>
+            </tr>
+        </tbody>
+        </table>
         </div>
-        <div class=span3>
+        
+        <div class="row">
             <h4>Availability</h4>
-            <p><strong>Suppliers:</strong> {{mol.supplier}}</p>
-            <p><strong>Supplier Codes:</strong> {{mol.supplierID}}</p>
-            <p><strong>Storage ID:</strong> {{mol.storageID}}</p>
-            <p><strong>Quantity:</strong> {{mol.amount}} {{mol.unit}}</p>
-            <p><strong>Class:</strong> {{mol.molclass}}</p>
-            <p><strong>Added:</strong> {{mol.added}}</p>
+        <table>
+        <thead>
+            <tr>
+            <th>Suppliers</th>
+            <th>Supplier IDs</th>
+            <th>Storage ID</th>
+            <th>Quantity</th>
+            <th>Class</th>
+            <th>Added</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <td>{{mol.supplier}}</td>
+            <td>{{mol.supplierID}}</td>
+            <td>{{mol.storageID}}</td>
+            <td>{{mol.amount}} {{mol.unit}}</td>
+            <td>{{mol.molclass}}</td>
+            <td>{{mol.added}}</td>
+            </tr>
+        </tbody>
+        </table>
         </div>
-        </div>
-        <div>
-        <hr>
-        <h4>Comment</h4>
+        
+        <div class="row">
+        <fieldset>
+        <legend>Comment</legend>
         <p>{{mol.comment}}</p>
+        </fieldset>
         </div>
 </section>
 
