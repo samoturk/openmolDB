@@ -200,33 +200,31 @@ def statistics(request):
                     names.append("X")
                 else:
                     names.append(mol.name)
-            #logpmw +=  "[" + str(mol.logP) + ", " + str(mol.CMW)+ ", '" + str(molname) + "'], "
             #c += 1 # uncomment for testing
         except:
             pass
         #if c == 100: # uncomment for testing
         #    break # uncomment for testing
-    #logpmw = logpmw[:-2]
     logpmw = dumps(zip(logp, mw))
     hbamw = dumps(zip(hba, mw))
     hbdmw = dumps(zip(hbd, mw))
     tpsamw = dumps(zip(tpsa, mw))
     #histograms
-    mwhist, mwedge = histogram(mw, bins=20)
+    mwhist, mwedge = histogram(mw, bins=range(0,800,50))
     mwhist = dumps(zip(array(mwedge[:-1]).tolist(), array(mwhist).tolist()))
     fsp3hist, fsp3edge = histogram(fsp3, bins=20)
     fsp3hist = dumps(zip(array(fsp3edge[:-1]).tolist(), array(fsp3hist).tolist()))
-    nrbhist, nrbedge = histogram(nrb, bins=35)
+    nrbhist, nrbedge = histogram(nrb, bins=[x + 0.5 for x in range(-1, 26, 1)])
     nrbhist = dumps(zip(array(nrbedge[:-1]).tolist(), array(nrbhist).tolist()))
-    complexityhist, complexityedge = histogram(complexity, bins=20)
+    complexityhist, complexityedge = histogram(complexity, bins=range(0,160,10))
     complexityhist = dumps(zip(array(complexityedge[:-1]).tolist(), array(complexityhist).tolist()))
-    logphist, logpedge = histogram(logp, bins=20)
+    logphist, logpedge = histogram(logp, bins=[x + 0.5 for x in range(-10, 10, 1)])
     logphist = dumps(zip(array(logpedge[:-1]).tolist(), array(logphist).tolist()))
-    hbahist, hbaedge = histogram(hba, bins=20)
+    hbahist, hbaedge = histogram(hba, bins=[x + 0.5 for x in range(-1, 21, 1)])
     hbahist = dumps(zip(array(hbaedge[:-1]).tolist(), array(hbahist).tolist()))
-    hbdhist, hbdedge = histogram(hbd, bins=15)
+    hbdhist, hbdedge = histogram(hbd, bins=[x + 0.5 for x in range(-1, 11, 1)])
     hbdhist = dumps(zip(array(hbdedge[:-1]).tolist(), array(hbdhist).tolist()))
-    tpsahist, tpsaedge = histogram(tpsa, bins=15)
+    tpsahist, tpsaedge = histogram(tpsa, bins=range(0, 250, 10))
     tpsahist = dumps(zip(array(tpsaedge[:-1]).tolist(), array(tpsahist).tolist()))
     return render(request, 'statistics.html', {'servername':servername, 'logpmw':logpmw, 'hbamw':hbamw, 'hbdmw':hbdmw, 'tpsamw':tpsamw, 'mwhist':mwhist, 'fsp3hist':fsp3hist, 'nrbhist':nrbhist, 'complexityhist':complexityhist, 'logphist':logphist, 'hbahist':hbahist, 'hbdhist':hbdhist, 'tpsahist':tpsahist})
 
