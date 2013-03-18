@@ -3,51 +3,196 @@
 <script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb-libs.js"></script>
 <script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb.js"></script>
 
+{% if error %}
+<script>
+$(document).ready(function(){
+$("#alert").click(function () {
+
+        $("#alert").slideUp();
+
+});
+});
+</script>
+    <div class="alert-box alert" id="alert">
+    <a type="button" class="close" id="alert" data-dismiss="alert" href="#">&times;</a>
+    <dl class="row">
+    <dt>Error in submitted data!</dt>
+
+{% for e in error %}
+    <dd>{{e}}</dd>
+{% endfor %}
+    </dl>
+    </div>
+        <div class="row">
+        <p>
+            <a href="{{servername}}/upload.html" class="button"><i class="icon-cloud-upload"></i> Back to upload</a>
+        </p>
+    </div>
+{% elif success %}
+<script>
+$(document).ready(function(){
+$("#alert").click(function () {
+
+        $("#alert").slideUp();
+
+});
+});
+</script>
+    <div class="alert-box success" id="alert">
+    <a type="button" class="close" id="alert" data-dismiss="alert" href="#">&times;</a>
+    <dl class="row">
+    {% for s in success %}
+    <dd>{{s}}</dd>
+    {% endfor %}    </dl>
+    </div>
+    <div class="row">
+        <p>
+            <a href="{{servername}}/upload.html" class="button"><i class="icon-cloud-upload"></i> Back to upload</a>
+        </p>
+    </div>
+
+{% else %}
+<div class="alert-box">
+<div class="row">
+<strong>Please check the data carefully and either confirm or cancel the submission at the bottom</strong>
+</div>
+</div>
 {% for mol in mollist %}
-<section id="mol{{mol.id}}">
-        <a href="{{servername}}/molecule/{{mol.id}}"><h2><i class="icon-beaker"></i> {{mol.name}}</h2></a>
-        <div class=row>
-        <div class=span2>
+<link rel="stylesheet" type="text/css" href="{{servername}}/static/js/ChemDoodleWeb.css" />
+
+<script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb-libs.js"></script>
+<script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb.js"></script>
+
+
+<section id="molecule">
+    <fieldset class="row">
+        <legend><h3><i class="icon-beaker"></i> {{mol.name}}</h3></legend>
+    <div class=row>
+        <div class="large-3 columns">
             <script>
-            var viewACS = new ChemDoodle.ViewerCanvas('{{mol.id}}', 100, 100);
-            viewACS.specs.bonds_width_2D = .6;
-            viewACS.specs.bonds_saturationWidth_2D = .18;
-            viewACS.specs.bonds_hashSpacing_2D = 2.5;
-            viewACS.specs.atoms_font_size_2D = 10;
+            var viewACS = new ChemDoodle.ViewerCanvas('viewACS', 150, 150);
+            viewACS.specs.bonds_width_2D = 1.2;
+            viewACS.specs.bonds_saturationWidth_2D = .36;
+            viewACS.specs.bonds_hashSpacing_2D = 5;
+            viewACS.specs.atoms_font_size_2D = 12;
             viewACS.specs.atoms_font_families_2D = ['Helvetica', 'Arial', 'sans-serif'];
             viewACS.specs.atoms_displayTerminalCarbonLabels_2D = true;
-            var caffeineMolFile = '{{mol.molfile}}';
-            var caffeine = ChemDoodle.readMOL(caffeineMolFile);
-            caffeine.scaleToAverageBondLength(14.4);
-            viewACS.loadMolecule(caffeine);
+            var MolFile = '{{mol.molfile}}';
+            var Mol = ChemDoodle.readMOL(MolFile);
+            Mol.scaleToAverageBondLength(18);
+            viewACS.loadMolecule(Mol);
             </script>
-            <p><strong><abbr title="Chemical Abstracts Service registry number">CAS:</abbr></strong> {{mol.CAS}}</p>
-            <p><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr>:</strong> {{mol.SMILES}}</p>
         </div>
-        <div class=span3>
-            <h4>Properties</h4>
-            <p><strong><abbr title="Molecular weight">MW:</abbr></strong> {{mol.CMW|floatformat:3}}</p>
-            <p><strong>Brutto formula:</strong> {{mol.CHN}}</p>
-        </div>
-        <div class=span3>
-            <h4>Availability</h4>
-            <p><strong>Supplier and code:</strong> {{mol.supplier}}; {{mol.supplierID}}</p>
-            <p><strong>Storage ID:</strong> {{mol.storageID}}</p>
-            <p><strong>Quantity:</strong> {{mol.amount}} {{mol.unit}}</p>
+        <div class="large-5 columns left">
+            <dl>
+            <dd><strong><abbr title="Chemical Abstracts Service registry number">CAS</abbr>:</strong>{{mol.CAS}}</dd>
+            <dd><strong>Other names:</strong> {{mol.altname}}</dd>
+            <dd><strong><abbr title="Simplified Molecular-Input Line-Entry System">SMILES</abbr>:</strong> {{mol.SMILES}}</dd>
+            </dl>
         </div>
         </div>
+        
+        <div class="row">
+            <h5>Properties</h5>
+        <table>
+        <thead>
+            <tr>
+            <th><abbr title="Molecular weight">MW</abbr></th>
+            <th><abbr title="Hydrogen bond acceptors">HBA</abbr></th>
+            <th><abbr title="Hydrogen bond donors">HBD</abbr></th>
+            <th><abbr title="Logarithm of partition coefficient">LogP</abbr></th>
+            <th><abbr title="Topological polar surface area">TPSA</abbr></th>
+            <th><abbr title="Rotatable bonds">Rot.</abbr></th>
+            <th><abbr title="Complexity">Comp.</abbr></th>
+            <th><abbr title="Fraction of sp3 carbons">Fsp3C</abbr></th>
+            <th>Brutto formula</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <td>{{mol.CMW|floatformat:2}}</td>
+            <td>{{mol.HBA}}</td>
+            <td>{{mol.HBD}}</td>
+            <td>{{mol.logP|floatformat:2}}</td>
+            <td>{{mol.tpsa}}</td>
+            <td>{{mol.nrb}}</td>
+            <td>{{mol.complexity}}</td>
+            <td>{{mol.fsp3|floatformat:2}}</td>
+            <td>{{mol.CHN}}</td>
+            </tr>
+        </tbody>
+        </table>
+        </div>
+        
+        <div class="row">
+            <h5>Availability</h5>
+        <table>
+        <thead>
+            <tr>
+            <th>Suppliers</th>
+            <th>Supplier IDs</th>
+            <th>Storage ID</th>
+            <th>Quantity</th>
+            <th>Class</th>
+            <th>Added</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <td>{{mol.supplier}}</td>
+            <td>{{mol.supplierID}}</td>
+            <td>{{mol.storageID}}</td>
+            <td>{{mol.amount}} {{mol.unit}}</td>
+            <td>{{mol.molclass}}</td>
+            <td>{{mol.added}}</td>
+            </tr>
+        </tbody>
+        </table>
+        </div>
+        
+        <div class="row">
+            <h5>Bar codes</h5>
+        <table>
+        <thead>
+            <tr>
+            <th>Plate barcode</th>
+            <th>Sample barcode</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <td>platebarcode</td> <!--TODO replace with real barcode models -->
+            <td>samplebarcode</td>
+            </tr>
+        </tbody>
+        </table>
+        </div>
+        
+        <div class="row">
+        <fieldset>
+        <legend>Comment</legend>
+        <p>{{mol.comment}}</p>
+        </fieldset>
+        </div>
+        </fieldset>
 </section>
-<hr>
 {% endfor %}
-{{debugname}}
-{{uploadid}}
-<section class="pagination pagination-mini">
+<hr>
+<div class="row">
+<div class="large-2 columns">
 <form class="form-horizontal" action="" method="post">
 {% csrf_token %}
-<button class="btn btn-info btn-large" type="submit" value="confirm" name="confirm" >Confirm</button>
-</div>
+<button class="button success" type="confirm" value="confirm" name="confirm" ><i class="icon-thumbs-up"></i>Confirm</button>
 </form>
-</section>
+</div>
+<div class="large-2 columns left">
+<form class="form-horizontal" action="" method="post">
+{% csrf_token %}
+<button class="button alert" type="cancel" value="cancel" name="cancel" ><i class="icon-thumbs-down"></i>Cancel</button>
+</form>
+</div>
+</div>
+{% endif %}
 
 </div>
 

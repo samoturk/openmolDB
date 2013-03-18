@@ -19,6 +19,7 @@
         <legend><a href="{{servername}}/molecule/{{mol.id}}"><h3><i class="icon-beaker"></i> {{mol.name}}</h3></a></legend>
         <div class=row>
         <div class="large-2 columns">
+            <a href="{{servername}}/molecule/{{mol.id}}">
             <script>
             var viewACS = new ChemDoodle.ViewerCanvas('{{mol.id}}', 150, 150);
             viewACS.specs.bonds_width_2D = .6;
@@ -32,7 +33,7 @@
             caffeine.scaleToAverageBondLength(14.4);
             viewACS.loadMolecule(caffeine);
             </script>
-            
+            </a>
         </div>
         <div class="large-9 columns left">
         <table>

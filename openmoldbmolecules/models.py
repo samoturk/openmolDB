@@ -38,7 +38,7 @@ class Molecule(models.Model):
     molfile = models.TextField(blank=True, verbose_name='MolFile')
     added = models.DateField(auto_now=True, auto_now_add=True) #automatically updates date and adds date upon creation
     molclass = models.CharField(max_length=30, verbose_name='Type of compound')
-    randomstring = models.CharField(max_length=10, blank=True)
+    randomstring = models.CharField(max_length=10, blank=True) #uses session id
     
     def __unicode__(self):
         return u'%s, %s' % (self.name, self.CAS)

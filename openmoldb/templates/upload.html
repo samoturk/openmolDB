@@ -6,25 +6,24 @@
 
 {% else %}
 
-
 {% if logedin %}
 <div class="">
 <form class="form-horizontal" action="" method="post">
 {% csrf_token %}
 <button class="button tiny" type="submit" value="logout" name="logout" >Log out, {{user.username}}.</button>
-</div>
 </form>
 </div>
 
 {% if single %}
 
 <section id="single" class="row">
+    <fieldset class="row">
+        <legend><h2><i class="icon-cloud-upload"></i> Upload single molecule</h2></legend>
 <div>
-<h2>Upload single molecule.</h2>
-<ul>
-<li>Name and SMILES are required.</li>
-<li>OpenMolDB automatically calculates properties from SMILES code.</li>
-</ul>
+<dl class="panel">
+<dd>Name and SMILES are required.</dd>
+<dd>OpenMolDB automatically calculates properties from SMILES code.</dd>
+</dl>
 <form class="form-horizontal" action="/upload/" method="post">
 {% csrf_token %}
 
@@ -125,6 +124,7 @@
 </div>
 </form>
 </div>
+</fieldset>
 </section>
 
 {% endif %}

@@ -18,7 +18,7 @@ servername = "http://127.0.0.1:8000" #Change to your server name
 
 logintoupload = True # Require login to upload
 uploadsingle = True # Option to upload single molecule
-uploadtable = True # Option to upload csv table with mols
+uploadtable = False # Option to upload csv table with mols
 
 
 def home(request):
@@ -235,7 +235,21 @@ def upload(request):
     Upload form with user handling. Can enable/disable functionality with variables at the top of this file.
     Set them to false to disable.
     """
-    # TODO error handling
+    if 'confirm' in request.POST:
+        mollist = Molecule.objects.filter(randomstring__contains=request.session.session_key)
+        nummols = len(mollist)
+        for mol in mollist:
+            mol.randomstring = ""
+            mol.save()
+        success = []
+        success.append(str(nummols) + " molecule(s) were added to the database!")
+        return render(request, 'uploadresult.html', {'servername':servername, 'success':success})
+    
+    if 'cancel' in request.POST:
+        Molecule.objects.filter(randomstring__contains=request.session.session_key).delete()
+        success = []
+        success.append("No molecules were added to the database!")
+        return render(request, 'uploadresult.html', {'servername':servername, 'success':success})
     if 'logout' in request.POST:
         # Log out the user
         auth.logout(request)
@@ -243,7 +257,10 @@ def upload(request):
     if 'single' in request.POST:
         form = SubmitSingle(request.POST)
         form.is_valid()
-        randomstring = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(6))
+        error = []
+        badsmiles = False
+        #randomstring = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(6))
+        randomstring = request.session.session_key #sessionid
         name = form.cleaned_data['name']
         smiles = form.cleaned_data['smiles']
         altname = form.cleaned_data['altname']
@@ -255,17 +272,27 @@ def upload(request):
         comment = form.cleaned_data['comment']
         unit = form.cleaned_data['unit']
         amount = form.cleaned_data['amount']
-        addsingle(name, altname, supplier, supplierID, storageID, unit, amount, cas, smiles, comment, molclass, randomstring)
+        
         try:
-            pass
+            pybel.readstring("smi", str(smiles))
         except:
-            pass
-        return render(request, 'uploadresult.html', {'servername':servername, 'debugname':name, 'uploadid':randomstring})
+            error.append("Error in SMILES")
+            badsmiles = True
+        
+        if form.is_valid() == False or badsmiles:
+            for item in form.errors:
+                error.append(form[item].errors)
+            return render(request, 'uploadresult.html', {'servername':servername, 'error':error})
+        
+        addsingle(name, altname, supplier, supplierID, storageID, unit, amount, cas, smiles, comment, molclass, randomstring)
+        mollist = Molecule.objects.filter(randomstring__contains=randomstring)
+        return render(request, 'uploadresult.html', {'servername':servername, 'debugname':name, 'mollist':mollist})
         
     if uploadsingle == False and uploadtable == False:
         return render(request, 'upload.html', {'servername':servername, 'nogo':'nogo'})
     else:
         if logintoupload == True and not request.user.is_authenticated():
+            # Serve notice that you need to log in in order to upload
             form = SubmitSingle()
             fileform = UploadFileForm()
             return render(request, 'upload.html', {'servername':servername, 'form':form, 'fileform':fileform})
