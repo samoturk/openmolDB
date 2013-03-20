@@ -14,12 +14,13 @@ import string
 import random
 #from django.http import HttpResponse 
 
+#Some settings
 servername = "http://127.0.0.1:8000" #Change to your server name
 
 logintoupload = True # Require login to upload
 uploadsingle = True # Option to upload single molecule
-uploadtable = False # Option to upload csv table with mols
-
+uploadtable = True # Option to upload csv table with mols
+checkpains = True # Option to check pains if mol is compound or hts
 
 def home(request):
     #home page
@@ -257,13 +258,15 @@ def upload(request):
         form.is_valid()
         error = []
         badsmiles = False
-        #randomstring = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(6))
         randomstring = request.session.session_key #sessionid
-        name = form.cleaned_data['name']
         smiles = form.cleaned_data['smiles']
+        name = form.cleaned_data['name']
         altname = form.cleaned_data['altname']
         cas = form.cleaned_data['cas']
+        storage = form.cleaned_data['storage']
         storageID = form.cleaned_data['storageid']
+        platebarcode = form.cleaned_data['platebarcode']
+        samplebarcode = form.cleaned_data['samplebarcode']
         supplier = form.cleaned_data['supplier']
         supplierID = form.cleaned_data['supplierid']
         molclass = form.cleaned_data['molclass']

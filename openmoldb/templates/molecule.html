@@ -75,6 +75,7 @@
             <tr>
             <th>Suppliers</th>
             <th>Supplier IDs</th>
+            <th>Storage</th>
             <th>Storage ID</th>
             <th>Quantity</th>
             <th>Class</th>
@@ -85,6 +86,7 @@
             <tr>
             <td>{{mol.supplier}}</td>
             <td>{{mol.supplierID}}</td>
+            <td>{{mol.storage}}</td>
             <td>{{mol.storageID}}</td>
             <td>{{mol.amount}} {{mol.unit}}</td>
             <td>{{mol.molclass}}</td>
@@ -107,6 +109,22 @@
             <tr>
             <td>platebarcode</td> <!--TODO replace with real barcode models -->
             <td>samplebarcode</td>
+            </tr>
+        </tbody>
+        </table>
+        </div>
+        
+        <div class="row">
+            <h4><i class="icon-ambulance"></i> PAINS</h4>
+        <table>
+        <thead>
+            <tr>
+            <th>Identified <abbr title="Pan Assay Interference Compounds">PAINS</abbr></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <td>pains</td> <!--TODO replace with real data from models -->
             </tr>
         </tbody>
         </table>

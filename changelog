@@ -34,3 +34,10 @@ search page in Chrome
 2013-03-17
 -cleaned up the design, molecular data is now in tables
 
+2013-03-18
+-single molecule upload works now
+-improvements to statistics section (histogram bins are now strictly defined) 
+
+2013-03-20
+-implemented PAINS identification (not yet integrated in OpenMolDB)
+-cleaning up (added all fields in Molecule model in upload single and search)

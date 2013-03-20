@@ -88,9 +88,7 @@ function getmol()
     <div class="large-6 columns left">
     {{form.smiles}}
     </div>
-    </div>
-    
-    <div class="row">
+
     <div class="large-1 columns">
     <label for="tanimoto"><strong>Tanimoto</strong></label>
     </div>
@@ -113,9 +111,7 @@ function getmol()
         <div class="large-1 columns left">
         {{form.maxmw}}
         </div>
-    </div>
-    
-    <div class="row">
+
         <div class="large-1 columns">
         <label for="MinLogP"><strong>LogP:</strong></label>
         </div>
@@ -137,9 +133,7 @@ function getmol()
         <div class="large-1 columns left">
     {{form.maxhba}}
     </div>
-    </div>
-    
-    <div class="row">
+
         <div class="large-1 columns">
     <label for="MinHBA"><strong>H-bond acceptors:</strong></label>
             </div>
@@ -167,7 +161,30 @@ function getmol()
     
     <div class="row">
     <div class="large-1 columns">
-    <label for="Storage"><strong>StorageID:</strong></label>
+    <label for="Name"><strong>Name:</strong></label>
+    </div>
+    <div class="large-3 columns left">
+    {{form.name}}
+    </div>
+
+    <div class="large-1 columns">
+    <label for="AltName"><strong>Alt. name:</strong></label>
+    </div>
+    <div class="large-3 columns left">
+    {{form.altname}}
+    </div>
+    </div>
+    
+    <div class="row">
+    <div class="large-1 columns">
+    <label for="Storage"><strong>Storage:</strong></label>
+    </div>
+    <div class="large-3 columns left">
+    {{form.storage}}
+    </div>
+
+    <div class="large-1 columns">
+    <label for="Storageid"><strong>StorageID:</strong></label>
     </div>
     <div class="large-3 columns left">
     {{form.storageid}}
@@ -176,19 +193,17 @@ function getmol()
     
     <div class="row">
     <div class="large-1 columns">
-    <label for="CAS"><strong><abbr title="Chemical Abstracts Service registry number">CAS:</abbr></strong></label>
+    <label for="Platebarcode"><strong>Plate barcode:</strong></label>
     </div>
     <div class="large-3 columns left">
-    {{form.cas}}
+    {{form.platebarcode}}
     </div>
-    </div>
-    
-    <div class="row">
+
     <div class="large-1 columns">
-    <label for="Name"><strong>Name:</strong></label>
+    <label for="Samplebarcode"><strong>Sample barcode:</strong></label>
     </div>
     <div class="large-3 columns left">
-    {{form.name}}
+    {{form.samplebarcode}}
     </div>
     </div>
     
@@ -199,9 +214,7 @@ function getmol()
     <div class="large-3 columns left">
     {{form.supplier}}
     </div>
-    </div>
     
-    <div class="row">
     <div class="large-1 columns">
     <label for="suppID"><strong>Supplier ID:</strong></label>
     </div>
@@ -211,6 +224,13 @@ function getmol()
     </div>
     
     <div class="row">
+    <div class="large-1 columns">
+    <label for="CAS"><strong><abbr title="Chemical Abstracts Service registry number">CAS:</abbr></strong></label>
+    </div>
+    <div class="large-3 columns left">
+    {{form.cas}}
+    </div>
+
     <div class="large-1 columns">
     <label for="molclass"><strong>Class:</strong></label>
     </div>
