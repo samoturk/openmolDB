@@ -21,7 +21,8 @@ Run `python2 ~/public_html/manage.py syncdb`
 
 ## Apache configuration
 Add to the end of /etc/httpd/conf/httpd.conf:
-```LoadModule wsgi_module modules/mod_wsgi.so
+```
+LoadModule wsgi_module modules/mod_wsgi.so
 Alias /static/ /home/openmoldb/public_html/static/
 
 <Directory /home/openmoldb/public_html/static>
@@ -42,7 +43,8 @@ Allow from all
 StartServers 1
 MinSpareServers 1
 MaxSpareServers 3
-MaxClients 50```
+MaxClients 50
+```
 
 Start apache: `systemctl start httpd`
 
