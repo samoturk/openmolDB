@@ -3,19 +3,23 @@ import openbabel
 import csv
 
 from openmoldbmolecules.models import Molecule
+from openmoldbmolecules.filter_pains import detect_pains
 
-def addsingle(name, altname, supplier, supplierID, storageID, unit, amount, cas, smiles, comment, molclass, randomstring):
+def addsingle(name, altname, supplier, supplierID, storage, storageID, unit, amount, cas, smiles, comment, molclass, platebarcode, samplebarcode, randomstring):
     #do some datachecks and encode in ACSII since some databases have problems with UTF-8
     name = name.decode("windows-1252").encode('utf-8','ignore')
     altname = altname.decode("windows-1252").encode('utf-8','ignore')
     supplier = supplier.decode("windows-1252").encode('utf-8','ignore')
     supplierID = supplierID.decode("windows-1252").encode('utf-8','ignore')
+    storage = storage.decode("windows-1252").encode('utf-8','ignore')
     storageID = storageID.decode("windows-1252").encode('utf-8','ignore')
     unit = unit.decode("windows-1252").encode('utf-8','ignore')
     cas = cas.decode("windows-1252").encode('utf-8','ignore')
     smiles = smiles.decode("windows-1252").encode('utf-8','ignore')
     comment = comment.decode("windows-1252").encode('utf-8','ignore')
     molclass = molclass.decode("windows-1252").encode('utf-8','ignore')
+    platebarcode = platebarcode.decode("windows-1252").encode('utf-8','ignore')
+    samplebarcode = samplebarcode.decode("windows-1252").encode('utf-8','ignore')
     # Make sure amount is a number
     try:
         amount = float(line[amountc])
@@ -42,7 +46,7 @@ def addsingle(name, altname, supplier, supplierID, storageID, unit, amount, cas,
         logP=descs["logP"]
         tpsa=descs["TPSA"]
         #Get number  of rotatable bonds
-        smarts = pybel.Smarts("[!$([NH]!@C(=O))&!D1&!$(*#*)]\&!@[!$([NH]!@C(=O))&!D1&!$(*#*)]")
+        smarts = pybel.Smarts(r"[!$([NH]!@C(=O))&!D1&!$(*#*)]\&!@[!$([NH]!@C(=O))&!D1&!$(*#*)]")
         rb = smarts.findall(mol)
         nrb = len(rb)
         #Calculate Fsp3
@@ -60,11 +64,21 @@ def addsingle(name, altname, supplier, supplierID, storageID, unit, amount, cas,
         fprint = mol.calcfp()
         bitson = fprint.bits
         nbitson = len(bitson)
-        m = Molecule(name=name,SMILES=smiles, altname=altname, supplier=supplier, supplierID=supplierID, CMW=descs["MW"], CHN=CHN, HBA=HBA, HBD=HBD, logP=logP, tpsa=tpsa, amount=amount, unit=unit, CAS=cas, storageID=storageID, molfile=outMDL, nrb=nrb, fingerprint=bitson, complexity=nbitson, comment=comment, molclass=molclass, fsp3=fsp3, randomstring=randomstring)
+        if molclass == 'hts' or molclass == 'compound':
+            pains = detect_pains(mol)
+        else:
+            pains = 'Not checked'
+        m = Molecule(name=name,SMILES=smiles, altname=altname, supplier=supplier, supplierID=supplierID, 
+        CMW=descs["MW"], CHN=CHN, HBA=HBA, HBD=HBD, logP=logP, tpsa=tpsa, amount=amount, unit=unit, 
+        CAS=cas, storage=storage, storageID=storageID, molfile=outMDL, nrb=nrb, fingerprint=bitson, complexity=nbitson, 
+        comment=comment, molclass=molclass, fsp3=fsp3, pains=pains, platebarcode=platebarcode, 
+        samplebarcode=samplebarcode, randomstring=randomstring)
         m.save()
     except:
         # OpenBabel failed, no properties, etc..
-        m = Molecule(name=name,SMILES=smiles, altname=altname, supplier=supplier, supplierID=supplierID, amount=amount, unit=unit, CAS=cas, storageID=storageID, comment=comment, molclass=molclass, randomstring=randomstring)
+        m = Molecule(name=name,SMILES=smiles, altname=altname, supplier=supplier, supplierID=supplierID, 
+        amount=amount, unit=unit, CAS=cas, storage=storage, storageID=storageID, comment=comment, molclass=molclass, 
+        platebarcode=platebarcode, samplebarcode=samplebarcode, randomstring=randomstring)
         m.save()
         #Save data to database
 

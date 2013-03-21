@@ -2,7 +2,9 @@ import pybel
 
 def detect_pains(mol):
     """
-    Detects PAINS and returs a string with "painful elements" found in molecule
+    Detects PAINS 
+    accepts pybel mol object
+    returs a string with "painful elements" found in molecule
     References:
     http://pubs.acs.org/doi/abs/10.1021/jm901137j
     SMARTS codes thanks to:
@@ -493,5 +495,5 @@ def detect_pains(mol):
     for pain in painsdata:
         smarts = pybel.Smarts(pain.split(' ')[0])
         if smarts.findall(mol):
-            painsfound += pain.split(' ')[1]
+            painsfound += pain.split(' ')[1] + " "
     return painsfound

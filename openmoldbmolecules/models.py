@@ -36,12 +36,12 @@ class Molecule(models.Model):
     unit = models.CharField(max_length=10, blank=True, verbose_name='Unit') # User defined
     comment = models.TextField(blank=True, verbose_name='Comment') # User defined
     molfile = models.TextField(blank=True, verbose_name='MolFile') # Calculated from SMILES
-    #pains = models.CharField(max_length=100, verbose_name='Pan Assay Interference Compounds') # Calculated from SMILES TODO
+    pains = models.TextField(max_length=100, verbose_name='Pan Assay Interference Compounds', blank=True) # Calculated from SMILES
     added = models.DateField(auto_now=True, auto_now_add=True) #automatically updates date and adds date upon creation
     molclass = models.CharField(max_length=30, verbose_name='Type of compound') # User defined (recommended: chemical, hts, compound; for hts and compound PAINS can be calculated
-    randomstring = models.CharField(max_length=10, blank=True) # Uses session id TODO change length
-    #platebarcode = models.CharField(max_length=30, verbose_name='Plate barcode') # User defined TODO
-    #samplebarcode = models.CharField(max_length=30, verbose_name='Sample barcode') # User defined TODO
+    randomstring = models.CharField(max_length=32, blank=True) # Uses session id
+    platebarcode = models.CharField(max_length=64, verbose_name='Plate barcode', blank=True) # User defined
+    samplebarcode = models.CharField(max_length=64, verbose_name='Sample barcode', blank=True) # User defined
     
     def __unicode__(self):
         return u'%s, %s' % (self.name, self.CAS)

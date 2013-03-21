@@ -10,6 +10,7 @@ def add_mols(data):
     suppc = ""
     suppidc = ""
     storc = ""
+    storidc = ""
     amountc = ""
     unitc = ""
     casc = ""
@@ -30,8 +31,10 @@ def add_mols(data):
             suppc = counter
         elif cl == "supplierid":
             suppidc = counter
-        elif cl == "storageid":
+        elif cl == "storage":
             storc = counter
+        elif cl == "storageid":
+            storidc = counter
         elif cl == "amount":
             amountc = counter
         elif cl == "unit":
@@ -46,7 +49,7 @@ def add_mols(data):
             altsupplierIDc = counter
         elif cl == "comment":
             commc = counter
-        elif cl == "class":
+        elif cl == "molclass":
             classc = counter
         counter += 1
 
@@ -67,6 +70,9 @@ def add_mols(data):
             
         if type(storc) == int:
             print head[storc] + " ",
+        
+        if type(storidc) == int:
+            print head[storidc] + " ",
             
         if type(amountc) == int:
             print head[amountc] + " ",
@@ -121,7 +127,12 @@ def add_mols(data):
                     suppid = ""
             
                 if type(storc) == int:
-                    storageid = line[storc].decode("windows-1252").encode('utf-8','ignore')
+                    storage = line[storc].decode("windows-1252").encode('utf-8','ignore')
+                else:
+                    storage = ""
+                
+                if type(storidc) == int:
+                    storageid = line[storidc].decode("windows-1252").encode('utf-8','ignore')
                 else:
                     storageid = ""
             
@@ -211,10 +222,10 @@ def add_mols(data):
                     bitson = fprint.bits
                     nbitson = len(bitson)
                     print name
-                    m = Molecule(name=name,SMILES=smiles, altname=altname, supplier=supp, supplierID=suppid, CMW=descs["MW"], CHN=CHN, HBA=HBA, HBD=HBD, logP=logP, tpsa=tpsa, amount=amount, unit=unit, CAS=cas, storageID=storageid, molfile=outMDL, nrb=nrb, fingerprint=bitson, complexity=nbitson, altsupplier=altsupplier, altsupplierID=altsupplierID , comment=comm, molclass=molclass, fsp3=fsp3)
+                    m = Molecule(name=name,SMILES=smiles, altname=altname, supplier=supp, supplierID=suppid, CMW=descs["MW"], CHN=CHN, HBA=HBA, HBD=HBD, logP=logP, tpsa=tpsa, amount=amount, unit=unit, CAS=cas, storage=storage, storageID=storageid, molfile=outMDL, nrb=nrb, fingerprint=bitson, complexity=nbitson, altsupplier=altsupplier, altsupplierID=altsupplierID , comment=comm, molclass=molclass, fsp3=fsp3)
                     m.save()
                 except:
-                    m = Molecule(name=name,SMILES=smiles, altname=altname, supplier=supp, supplierID=suppid, amount=amount, unit=unit, CAS=cas, storageID=storageid, altsupplier=altsupplier, altsupplierID=altsupplierID , comment=comm, molclass=molclass)
+                    m = Molecule(name=name,SMILES=smiles, altname=altname, supplier=supp, supplierID=suppid, amount=amount, unit=unit, CAS=cas, storage=storage, storageID=storageid, altsupplier=altsupplier, altsupplierID=altsupplierID , comment=comm, molclass=molclass)
                     m.save()
             #Save data to database
         else:

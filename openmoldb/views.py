@@ -69,6 +69,10 @@ def search(request):
     maxhba = form.cleaned_data['maxhba']
     minhbd = form.cleaned_data['minhbd']
     maxhbd = form.cleaned_data['maxhbd']
+    mintpsa = form.cleaned_data['mintpsa']
+    maxtpsa = form.cleaned_data['maxtpsa']
+    minfsp3 = form.cleaned_data['minfsp3']
+    maxfsp3 = form.cleaned_data['maxfsp3']
     chn = form.cleaned_data['chn']
     name = form.cleaned_data['name']
     storageid = form.cleaned_data['storageid']
@@ -76,6 +80,9 @@ def search(request):
     supplier = form.cleaned_data['supplier']
     cas = form.cleaned_data['cas']
     molclass = form.cleaned_data['molclass']
+    platebarcode = form.cleaned_data['platebarcode']
+    samplebarcode = form.cleaned_data['samplebarcode']
+    storage = form.cleaned_data['storage']
     if 'similarity' in request.GET:
         #similartiy search
         try:
@@ -88,9 +95,9 @@ def search(request):
                     smiles = str(form.cleaned_data['smiles'])
             query = pybel.readstring("smi", smiles)
             tanimoto = form.cleaned_data['tanimoto']
-            mollist = id_search(cas, name, storageid, supplierid, supplier, chn, molclass)
+            mollist = id_search(cas, name, storageid, supplierid, supplier, chn, molclass, platebarcode, samplebarcode, storage)
             mollistsmiles = fast_fp_search(mollist, smiles, tanimoto)
-            mollist = properties_search(mollistsmiles, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd)
+            mollist = properties_search(mollistsmiles, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd, mintpsa, maxtpsa, minfsp3, maxfsp3)
             paginator = Paginator(mollist, 15)
             page = request.GET.get('page') #get value of query
             nofmols = len(mollist)
@@ -120,9 +127,9 @@ def search(request):
                 except:
                     smarts = str(form.cleaned_data['smiles'])
             query = pybel.Smarts(smarts)
-            mollist = id_search(cas, name, storageid, supplierid, supplier, chn, molclass)
+            mollist = id_search(cas, name, storageid, supplierid, supplier, chn, molclass, platebarcode, samplebarcode, storage)
             mollistsmart = smarts_search(mollist, smarts)
-            mollist = properties_search(mollistsmart, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd)
+            mollist = properties_search(mollistsmart, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd, mintpsa, maxtpsa, minfsp3, maxfsp3)
             paginator = Paginator(mollist, 15)
             page = request.GET.get('page') #get value of query
             nofmols = len(mollist)
@@ -143,9 +150,9 @@ def search(request):
             return render(request, 'search.html', {'servername':servername, 'error': error, 'form':form})
     elif 'properties' in request.GET:
         #properties and IDs search
-        mollist = id_search(cas, name, storageid, supplierid, supplier, chn, molclass)
+        mollist = id_search(cas, name, storageid, supplierid, supplier, chn, molclass, platebarcode, samplebarcode, storage)
         if cas == '':
-            mollist = properties_search(mollist, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd)
+            mollist = properties_search(mollist, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd, mintpsa, maxtpsa, minfsp3, maxfsp3)
         
         paginator = Paginator(mollist, 15)
         page = request.GET.get('page') #get value of query
@@ -285,7 +292,7 @@ def upload(request):
                 error.append(form[item].errors)
             return render(request, 'uploadresult.html', {'servername':servername, 'error':error})
         
-        addsingle(name, altname, supplier, supplierID, storageID, unit, amount, cas, smiles, comment, molclass, randomstring)
+        addsingle(name, altname, supplier, supplierID, storage, storageID, unit, amount, cas, smiles, comment, molclass, platebarcode, samplebarcode, randomstring)
         mollist = Molecule.objects.filter(randomstring__contains=randomstring)
         return render(request, 'uploadresult.html', {'servername':servername, 'debugname':name, 'mollist':mollist})
         

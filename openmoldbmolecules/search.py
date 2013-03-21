@@ -54,14 +54,14 @@ def smarts_search(mollist, smarts):
             pass
     return ret
 
-def properties_search(mollist, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd):
+def properties_search(mollist, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd, mintpsa, maxtpsa, minfsp3, maxfsp3):
     ret = []
     for mol in mollist:
-        if all([mol.CMW >= minmw, mol.CMW <= maxmw, minlogp <= mol.logP,  mol.logP <= maxlogp, minhba <= mol.HBA,  mol.HBA <= maxhba , minhbd <= mol.HBD,  mol.HBD <= maxhbd]):
+        if all([mol.CMW >= minmw, mol.CMW <= maxmw, minlogp <= mol.logP,  mol.logP <= maxlogp, minhba <= mol.HBA,  mol.HBA <= maxhba , minhbd <= mol.HBD,  mol.HBD <= maxhbd, mintpsa <= mol.tpsa,  mol.tpsa <= maxtpsa, minfsp3 <= mol.fsp3,  mol.fsp3 <= maxfsp3]):
             ret.append(mol)
     return ret
 
-def id_search(cas, name, storageid, supplierid, supplier, chn, molclass):
+def id_search(cas, name, storageid, supplierid, supplier, chn, molclass, platebarcode, samplebarcode, storage):
     if cas:
         #CAS should be unique, so no need for further filtering
         mols = Molecule.objects.filter(CAS__contains=cas)
@@ -80,5 +80,11 @@ def id_search(cas, name, storageid, supplierid, supplier, chn, molclass):
             mols = mols.filter(CHN__icontains=chn)
         if molclass:
             mols = mols.filter(molclass__icontains=molclass)
+        if platebarcode:
+            mols = mols.filter(platebarcode__icontains=platebarcode)
+        if samplebarcode:
+            mols = mols.filter(samplebarcode__icontains=samplebarcode)
+        if storage:
+            mols = mols.filter(storage__icontains=storage)
         return mols
     
