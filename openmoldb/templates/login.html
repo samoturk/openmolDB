@@ -14,31 +14,33 @@
 </form>
 </div>
 {% else %}
-<div class="login">
-<h2>Please log in.</h2>
+<div class="row">
+<fieldset>
+    <legend for="login"><strong><i class="icon-edit"></i> Please log in</strong></legend>
 <form class="form-horizontal" action="" method="post">
     {% csrf_token %}
 
-        <div class="control-group">
+        <div class="row">
         <label class="control-label" for="username">User name:</label>
-        <div class="controls">
+        <div class="large-3 columns">
         <input type="text" name="username" value="" id="username" placeholder="User" required>
         </div>
         </div>
-        <div class="control-group">
+        <div class="row">
         <label class="control-label" for="password">Password:</label>
-        <div class="controls">
+        <div class="large-3 columns">
         <input type="password" name="password" value="" id="password" placeholder="Password" required>
         </div>
         </div>
 
         <div class="form-actions">
         <div class="control-group">
-        <button class="btn btn-primary" type="submit" value="login" name="login">Log in</button>
+        <button class="button" type="submit" value="login" name="login">Log in</button>
         </div>
         </div>
 
 </form>
+</fieldset>
 </div>
 
 {% endif %}

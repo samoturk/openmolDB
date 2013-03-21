@@ -29,8 +29,9 @@ $("#alert").click(function () {
 <script type="text/javascript" src="{{servername}}/static/js/sketcher/jquery-ui-1.9.2.custom.min.js"></script>
 
 <script type="text/javascript" src="{{servername}}/static/js/sketcher/ChemDoodleWeb-sketcher.js"></script>
-
+    <div class="row">
     <button class="button tiny" id="infobutton"><i class="icon-question-sign"></i> How to use this form</button>
+    </div>
     <div class="alert-box" id="info" style="display: none">
     <ul class="row">
     <li>You can either draw a structure in structure editor or input SMILES/SMARTS.</li>
@@ -42,7 +43,7 @@ $("#alert").click(function () {
     <div class="alert-box alert" id="alert">
     <a type="button" class="close" id="alert" data-dismiss="alert" href="#">&times;</a>
     <dl class="row">
-    <dt class="row">Error in submitted data!</dt>
+    <dd class="row">Error in submitted data!</dd>
 
     {% for e in error %}
     <dd>{{e}}</dd>
@@ -56,7 +57,7 @@ $("#alert").click(function () {
 <fieldset>
     <legend for="sketcher"><strong><i class="icon-edit"></i> Structure editor</strong></legend>
     
-    <div class="row" name="sketcher">
+    <div name="sketcher">
 
 <script type="text/javascript">
 ChemDoodle.ELEMENT['H'].jmolColor = 'black';

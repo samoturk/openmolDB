@@ -2,15 +2,18 @@
 {% block content %}
 
 {% if nogo %}
-<h2>Sorry, feature not enabled!</h2>
-
+<div class="row">
+<h4>Sorry, feature not enabled!</h4>
+</div>
 {% else %}
 
 {% if logedin %}
 <div class="">
 <form class="form-horizontal" action="" method="post">
 {% csrf_token %}
+<div class="row">
 <button class="button tiny" type="submit" value="logout" name="logout" >Log out, {{user.username}}.</button>
+</div>
 </form>
 </div>
 
@@ -191,9 +194,9 @@
 {% endif %}
 {% else %}
 
-<div class="login">
-    <h2>Please login to submit entries or upload tables.</h2>
-    <a href="{{servername}}/login.html" class="btn btn-primary btn-large"><i class="icon-user"></i>Login</a>
+<div class="row">
+    <h4>Please login to submit entries or upload tables.</h4>
+    <a href="{{servername}}/login.html" class="button small"><i class="icon-user"></i>Login</a>
     <br>
 </div>
 
