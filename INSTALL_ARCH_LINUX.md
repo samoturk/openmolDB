@@ -5,20 +5,24 @@ Quick and dirty installation on Arch Linux
 
 ## Add user for OpenMolDB
 `useradd -m -g users -s /bin/bash openmoldb`
+
 `passwd openmoldb` 
 
 ## Login as "openmoldb" user
 `git clone https://github.com/samoturk/openmolDB.github`
+
 Move OpenMolDB files in /home/openmoldb/public_html
 
 Change permissions: `chmod -R a+xr /home/openmoldb`
+
 Open ~/public_html/openmoldb/views.py and set servername variable according to your configuration
 Open ~/public_html/openmoldb/settings.py and set database varibles according to your configuration
 Run `python2 ~/public_html/manage.py syncdb`
 
 ## Apache configuration
 Add to the end of /etc/httpd/conf/httpd.conf:
-`LoadModule wsgi_module modules/mod_wsgi.so
+```
+LoadModule wsgi_module modules/mod_wsgi.so
 Alias /static/ /home/openmoldb/public_html/static/
 
 <Directory /home/openmoldb/public_html/static>
@@ -39,7 +43,8 @@ Allow from all
 StartServers 1
 MinSpareServers 1
 MaxSpareServers 3
-MaxClients 50`
+MaxClients 50
+```
 
 Start apache: `systemctl start httpd`
 
