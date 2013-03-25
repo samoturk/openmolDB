@@ -4,6 +4,10 @@ import csv
 
 from openmoldbmolecules.models import Molecule
 
+"""
+THIS IS OBSOLETE! USE add2db.py
+"""
+
 def add_mols(data):
     namec = ""
     altnamec = ""

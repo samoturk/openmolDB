@@ -64,7 +64,8 @@ def addsingle(name, altname, supplier, supplierID, storage, storageID, unit, amo
         fprint = mol.calcfp()
         bitson = fprint.bits
         nbitson = len(bitson)
-        if molclass == 'hts' or molclass == 'compound':
+        if 'hts' in molclass.lower() or 'compound' in molclass.lower():
+            #print "hts"
             pains = detect_pains(mol)
         else:
             pains = 'Not checked'
@@ -82,3 +83,183 @@ def addsingle(name, altname, supplier, supplierID, storage, storageID, unit, amo
         m.save()
         #Save data to database
 
+def addtable(csvdata, cmdline, userinput, randomstring):
+    """
+    accepts csv table (from csv module)
+    checks first row for colums (name, altname, smiles, etc)
+    adds each row to the database
+    """
+    namec = ""
+    altnamec = ""
+    suppc = ""
+    suppidc = ""
+    storc = ""
+    storidc = ""
+    amountc = ""
+    unitc = ""
+    casc = ""
+    altsupplierc = ""
+    altsupplierIDc = ""
+    commc = ""
+    classc = ""
+    platec = ""
+    samplec = ""
+    counter = 0
+    head = csvdata.next()
+    print "Found columns:"
+    for c in head:
+        #Get the indexes of columns
+        cl = c.lower()
+        if cl == "name":
+            namec = counter
+            print "name ",
+        elif cl == "altname":
+            altnamec = counter
+            print "altname ",
+        elif cl == "supplier":
+            suppc = counter
+            print "supplier ",
+        elif cl == "supplierid":
+            suppidc = counter
+            print "supplierid ",
+        elif cl == "storage":
+            storc = counter
+            print "storage ",
+        elif cl == "storageid":
+            storidc = counter
+            print "storageid ",
+        elif cl == "amount":
+            amountc = counter
+            print "amount ",
+        elif cl == "unit":
+            unitc = counter
+            print "unit ",
+        elif cl == "cas":
+            casc = counter
+            print "cas ",
+        elif cl == "smiles":
+            smilesc = counter
+            print "smiles ",
+        elif cl == "supplier2":
+            altsupplierc = counter
+            print "supplier2 ",
+        elif cl == "supplierid2":
+            altsupplierIDc = counter
+            print "supplierid2 ",
+        elif cl == "comment":
+            commc = counter
+            print "comment ",
+        elif cl == "molclass":
+            classc = counter
+            print "molclass ",
+        elif cl == "platebarcode":
+            platec = counter
+            print "platebarcode ",
+        elif cl == "samplebarcode":
+            samplec = counter
+            print "samplebarcode ",
+        counter += 1
+
+    if type(smilesc) == int or type(namec) == int:
+        # has to have either smiles or name column
+        if cmdline:
+            print ""
+            userinput =  raw_input("Is this ok? yes/no: ")
+        #Check with user if everything looks OK
+        
+        if userinput == "yes":
+            for line in csvdata:
+                if type(namec) == int:
+                    name = line[namec]
+                else:
+                    name = ""
+                
+                if type(altnamec) == int:
+                    altname = line[altnamec]
+                else:
+                    altname = ""
+            
+                if type(suppc) == int:
+                    supplier = line[suppc]
+                else:
+                    supplier = ""
+            
+                if type(suppidc) == int:
+                    supplierID = line[suppidc]
+                else:
+                    supplierID = ""
+            
+                if type(storc) == int:
+                    storage = line[storc]
+                else:
+                    storage = ""
+                
+                if type(storidc) == int:
+                    storageID = line[storidc]
+                else:
+                    storageID = ""
+            
+                if type(amountc) == int:
+                    amount = line[amountc]
+                else:
+                    amount = ""
+            
+                if type(unitc) == int:
+                    unit = line[unitc]
+                else:
+                    unit = ""
+            
+                if type(casc) == int:
+                    cas = line[casc]
+                else:
+                    cas = ""
+            
+                if type(smilesc) == int:
+                    smiles = line[smilesc]
+                else:
+                    smiles = ""
+        
+                if type(altsupplierc) == int:
+                    altsupplier = line[altsupplierc]
+                else:
+                    altsupplier = ""
+        
+                if type(altsupplierIDc) == int:
+                    altsupplierID = line[altsupplierIDc]
+                else:
+                    altsupplierID = ""
+        
+                if type(commc) == int:
+                    comment = line[commc]
+                else:
+                    comment = ""
+                
+                if type(classc) == int:
+                    molclass = line[classc]
+                else:
+                    molclass = ""
+                
+                if type(platec) == int:
+                    platebarcode = line[platec]
+                else:
+                    platebarcode = ""
+                
+                if type(samplec) == int:
+                    samplebarcode = line[samplec]
+                else:
+                    samplebarcode = ""
+            
+                try:
+                    amount = float(line[amountc])
+                    unit = line[unitc]
+                except:
+                    amount = 0
+                    unit = "X"
+                
+                addsingle(name, altname, supplier, supplierID, storage, storageID, unit, amount, cas, smiles, comment, molclass, platebarcode, samplebarcode, randomstring)
+            
+            return "OK"
+        else:
+            return "No mols were added. Exiting!"
+    else:
+        return "No valid columns were found"

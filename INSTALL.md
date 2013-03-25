@@ -18,3 +18,14 @@ Then deploy it as you would any other Django project.
 
 Set servername variable in openmoldb/views.py to the name of your server.
 Have a look at settings.py and set your database engine, time zone, etc.
+
+## Bulk addition of molecules
+
+Save a table in your favourite spreadsheet program in csv format in excel
+dialect. Recognizes colums named with (first row):
+name, SMILES, altname, storage, storageID, CAS, supplier, supplierID, amount,
+unit, comment, molclass, platebarcode, samplebarcode
+
+Run: `python2 manage.py shell`
+Import add2db module: `from add2db import add2db`
+Finally add mols: `add2db("your_csv_table.csv")`

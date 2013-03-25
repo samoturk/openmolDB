@@ -496,4 +496,5 @@ def detect_pains(mol):
         smarts = pybel.Smarts(pain.split(' ')[0])
         if smarts.findall(mol):
             painsfound += pain.split(' ')[1] + " "
+            print pain.split(' ')[1]
     return painsfound

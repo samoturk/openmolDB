@@ -21,7 +21,10 @@ This project wouldn't be possible without these excellent open source projects:
 
 ## What does not work
 
-Upload functionality is not fully implemented yet.
+* Upload functionality is not fully implemented yet (it work for single molecule,
+but not for table).
+* Structure editor and viewer do not work in IE 8 and older
+* Structure editor is not rendered properly in Chrome
 
 ## Credits
 
