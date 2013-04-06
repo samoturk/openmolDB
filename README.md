@@ -9,6 +9,7 @@ Django based chemical database/inventory
 
 OpenMolDB is open source chemical database/inventory.
 It supports substructure and similarity search and filtering by properties. 
+Have a look at [demo](www.samoturk.info). 
 
 This project wouldn't be possible without these excellent open source projects:
 * Django - Python web framework, which is a base for OpenMolDB

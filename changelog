@@ -41,3 +41,9 @@ search page in Chrome
 2013-03-20
 -implemented PAINS identification (not yet integrated in OpenMolDB)
 -cleaning up (added all fields in Molecule model in upload single and search)
+
+2013-03-25
+-Added addition of mols in csv table (add2db module)
+
+2013-04-06
+-Added demo CSV table (ZINC drugs)

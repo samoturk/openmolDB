@@ -28,4 +28,7 @@ unit, comment, molclass, platebarcode, samplebarcode
 
 Run: `python2 manage.py shell`
 Import add2db module: `from add2db import add2db`
+
 Finally add mols: `add2db("your_csv_table.csv")`
+
+You can have a look at `demo_table.csv` for hints how to structure your own.
