@@ -47,3 +47,6 @@ search page in Chrome
 
 2013-04-06
 -Added demo CSV table (ZINC drugs)
+
+2013-04-22
+-Uploading of CSV tables works! Warning, crashes if badly formated CSV!

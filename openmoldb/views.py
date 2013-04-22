@@ -4,14 +4,15 @@ from openmoldbmolecules.models import Molecule
 from openmoldbmolecules.search import smiles_search, properties_search, id_search, smarts_search, fast_fp_search
 from openmoldbmolecules.forms import SearchForm, SubmitSingle, UploadFileForm
 from openmoldbmolecules.pagination import get_page_wo_page
-from openmoldbmolecules.addmols import addsingle
+from openmoldbmolecules.addmols import addsingle, addtable
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import auth
 from json import dumps
 from numpy import histogram, array
 import pybel
 import string
-import random
+#import random
+import csv
 #from django.http import HttpResponse 
 
 #Some settings
@@ -295,7 +296,25 @@ def upload(request):
         addsingle(name, altname, supplier, supplierID, storage, storageID, unit, amount, cas, smiles, comment, molclass, platebarcode, samplebarcode, randomstring)
         mollist = Molecule.objects.filter(randomstring__contains=randomstring)
         return render(request, 'uploadresult.html', {'servername':servername, 'debugname':name, 'mollist':mollist})
-        
+    
+    if 'table' in request.POST:
+        form = UploadFileForm(request.POST, request.FILES)
+        form.is_valid()
+        error = []
+        randomstring = request.session.session_key #sessionid
+        if form.is_valid():
+            cmdline = False
+            userinput="yes"
+            csvfile = request.FILES['file']#.read()
+            csvdata = csv.reader(csvfile, dialect="excel")
+            addtable(csvdata, cmdline, userinput, randomstring)
+            mollist = Molecule.objects.filter(randomstring__contains=randomstring)
+            return render(request, 'uploadresult.html', {'servername':servername, 'mollist':mollist})
+        else:
+            for item in form.errors:
+                error.append(form[item].errors)
+                return render(request, 'uploadresult.html', {'servername':servername, 'error':error})
+    
     if uploadsingle == False and uploadtable == False:
         return render(request, 'upload.html', {'servername':servername, 'nogo':'nogo'})
     else:

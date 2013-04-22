@@ -173,13 +173,13 @@
 <dd>Recommended names for "molclass": chemical, hts, compound; for hts and compound <abbr title="Pan Assay Interference Compounds">PAINS</abbr> can be calculated.</dd>
 </dl>
 
-<form class="form-horizontal" action="" method="post">
+<form enctype="multipart/form-data" class="form-horizontal" action="" method="post">
 {% csrf_token %}
 
 <div class="control-group">
     <label class="control-label" for="uploadfile">Select a file to upload:</label>
     <div class="controls">
-    {{fileform.fileform}} 
+    {{fileform.file}} 
     </div>
     </div>
 <div class="form-actions">

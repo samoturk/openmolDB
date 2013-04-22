@@ -46,4 +46,4 @@ class SubmitSingle(forms.Form):
     samplebarcode = forms.CharField(required=False, max_length=30, widget=forms.TextInput(attrs={'class':'large-3, columns', 'placeholder':'xx'}))
 
 class UploadFileForm(forms.Form):
-    fileform  = forms.FileField(required=True)
+    file  = forms.FileField(required=True, label='Select a file',help_text='max. 100 mols')
