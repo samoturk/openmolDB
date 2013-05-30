@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb-libs.js"></script>
-<script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb.js"></script>
+<script type="text/javascript" src="/static/js/ChemDoodleWeb-libs.js"></script>
+<script type="text/javascript" src="/static/js/ChemDoodleWeb.js"></script>
 
 {% if error %}
 <script>
@@ -25,7 +25,7 @@ $("#alert").click(function () {
     </div>
         <div class="row">
         <p>
-            <a href="{{servername}}/upload.html" class="button"><i class="icon-cloud-upload"></i> Back to upload</a>
+            <a href="/upload.html" class="button"><i class="icon-cloud-upload"></i> Back to upload</a>
         </p>
     </div>
 {% elif success %}
@@ -47,7 +47,7 @@ $("#alert").click(function () {
     </div>
     <div class="row">
         <p>
-            <a href="{{servername}}/upload.html" class="button"><i class="icon-cloud-upload"></i> Back to upload</a>
+            <a href="/upload.html" class="button"><i class="icon-cloud-upload"></i> Back to upload</a>
         </p>
     </div>
 
@@ -58,10 +58,10 @@ $("#alert").click(function () {
 </div>
 </div>
 {% for mol in mollist %}
-<link rel="stylesheet" type="text/css" href="{{servername}}/static/js/ChemDoodleWeb.css" />
+<link rel="stylesheet" type="text/css" href="/static/js/ChemDoodleWeb.css" />
 
-<script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb-libs.js"></script>
-<script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb.js"></script>
+<script type="text/javascript" src="/static/js/ChemDoodleWeb-libs.js"></script>
+<script type="text/javascript" src="/static/js/ChemDoodleWeb.js"></script>
 
 
 <section id="mol{{mol.id}}">

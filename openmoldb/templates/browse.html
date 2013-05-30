@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<link rel="stylesheet" type="text/css" href="{{servername}}/static/js/ChemDoodleWeb.css" />
+<link rel="stylesheet" type="text/css" href="/static/js/ChemDoodleWeb.css" />
 
-<script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb-libs.js"></script>
-<script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb.js"></script>
+<script type="text/javascript" src="/static/js/ChemDoodleWeb-libs.js"></script>
+<script type="text/javascript" src="/static/js/ChemDoodleWeb.js"></script>
 {% if mollist.has_previous %}
 
 {% else %}
@@ -18,10 +18,10 @@
 
 <div id="mol{{mol.id}}" class="row">
     <fieldset>
-        <legend><a href="{{servername}}/molecule/{{mol.id}}"><h3><i class="icon-beaker"></i> {{mol.name}}</h3></a></legend>
+        <legend><a href="/molecule/{{mol.id}}"><h3><i class="icon-beaker"></i> {{mol.name}}</h3></a></legend>
         <div class=row>
         <div class="large-2 columns">
-            <a href="{{servername}}/molecule/{{mol.id}}">
+            <a href="/molecule/{{mol.id}}">
             <script>
             var viewACS = new ChemDoodle.ViewerCanvas('{{mol.id}}', 150, 150);
             viewACS.specs.bonds_width_2D = .6;

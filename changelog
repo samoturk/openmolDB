@@ -50,3 +50,8 @@ search page in Chrome
 
 2013-04-22
 -Uploading of CSV tables works! Warning, crashes if badly formated CSV!
+
+2013-05-30
+-Cleaning, removed servername variable
+-Cleaned search function in views.py
+-Version bumped to 0.3

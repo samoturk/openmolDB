@@ -15,7 +15,7 @@ Move OpenMolDB files in /home/openmoldb/public_html
 
 Change permissions: `chmod -R a+xr /home/openmoldb`
 
-Open ~/public_html/openmoldb/views.py and set servername variable according to your configuration
+In openmoldb/views.py set variables under "Some settings" to either False or True.
 Open ~/public_html/openmoldb/settings.py and set database varibles according to your configuration
 Run `python2 ~/public_html/manage.py syncdb`
 

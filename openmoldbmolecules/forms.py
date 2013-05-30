@@ -4,7 +4,7 @@ import pybel
 class SearchForm(forms.Form):
     moltext = forms.CharField(required=False, widget=forms.Textarea(attrs={'class':'large-4', 'placeholder':'Mol data from editor', 'rows':'1'}))
     smiles = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder':'SMILES'}))
-    tanimoto = forms.FloatField(required=False, max_value=1.0, min_value=0.0, initial=0.8, error_messages={'max_value': 'Tanimoto: enter a number between 0 and 1!', 'min_value': 'Tanimoto: enter a number between 0 and 1!', 'invalid': 'Tanimoto: enter a number between 0 and 1!'}, widget=forms.TextInput(attrs={'class':'large, columns'}))
+    tanimoto = forms.FloatField(required=False, max_value=1.0, min_value=0.0, initial=0.7, error_messages={'max_value': 'Tanimoto: enter a number between 0 and 1!', 'min_value': 'Tanimoto: enter a number between 0 and 1!', 'invalid': 'Tanimoto: enter a number between 0 and 1!'}, widget=forms.TextInput(attrs={'class':'large, columns', 'value':'0.7'}))
     minmw = forms.FloatField(required=False, initial=0.0, error_messages={'invalid': 'Molecular weight: enter a number!'}, widget=forms.TextInput(attrs={'class':'large-1, colums'}))
     maxmw = forms.FloatField(required=False, initial=9999, error_messages={'invalid': 'Molecular weight: enter a number!'}, widget=forms.TextInput(attrs={'class':'large-1, colums'}))
     minlogp = forms.FloatField(required=False, initial=-99, error_messages={'invalid': 'LogP: enter a number!'}, widget=forms.TextInput(attrs={'class':'large-1, colums'}))

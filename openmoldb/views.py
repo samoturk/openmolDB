@@ -1,4 +1,4 @@
-#!/usr/bin/python/
+#!/usr/bin/python
 from django.shortcuts import render, render_to_response, get_object_or_404, HttpResponseRedirect
 from openmoldbmolecules.models import Molecule
 from openmoldbmolecules.search import smiles_search, properties_search, id_search, smarts_search, fast_fp_search
@@ -11,13 +11,9 @@ from json import dumps
 from numpy import histogram, array
 import pybel
 import string
-#import random
 import csv
-#from django.http import HttpResponse 
 
 #Some settings
-servername = "http://127.0.0.1:8000" #Change to your server name
-
 logintoupload = True # Require login to upload
 uploadsingle = True # Option to upload single molecule
 uploadtable = True # Option to upload csv table with mols
@@ -25,7 +21,7 @@ checkpains = True # Option to check pains if mol is compound or hts
 
 def home(request):
     #home page
-    return render(request, 'index.html', {'servername':servername})
+    return render(request, 'index.html')
 
 def molecule(request, idnum):
     #Views for individual molecules
@@ -35,7 +31,7 @@ def molecule(request, idnum):
         raise Http404()
     mol = get_object_or_404(Molecule, pk=idnum)
     quantity = str(mol.amount) + " " + str(mol.unit)
-    return render(request, 'molecule.html', {'servername':servername, 'mol':mol, 'molname':mol.name, 'smiles':mol.SMILES, 'cas':mol.CAS, 'altname':mol.altname, 'molfile':mol.molfile, 'mw':mol.CMW, 'chn':mol.CHN, 'hba':mol.HBA, 'hbd':mol.HBD, 'logp':mol.logP, 'tpsa':mol.tpsa, 'supp':mol.supplier, 'suppid':mol.supplierID, 'storage':mol.storageID, 'comm':mol.comment, 'quantity':quantity, 'added':mol.added})
+    return render(request, 'molecule.html', {'mol':mol, 'molname':mol.name, 'smiles':mol.SMILES, 'cas':mol.CAS, 'altname':mol.altname, 'molfile':mol.molfile, 'mw':mol.CMW, 'chn':mol.CHN, 'hba':mol.HBA, 'hbd':mol.HBD, 'logp':mol.logP, 'tpsa':mol.tpsa, 'supp':mol.supplier, 'suppid':mol.supplierID, 'storage':mol.storageID, 'comm':mol.comment, 'quantity':quantity, 'added':mol.added})
 
 def browse(request):
     mollist = Molecule.objects.all()
@@ -50,7 +46,7 @@ def browse(request):
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
         mollist = paginator.page(paginator.num_pages)
-    return render(request, 'browse.html', {'servername':servername, 'mollist':mollist, 'currpage':page, 'ofmols':nofmols, 'currentpath':'?'})
+    return render(request, 'browse.html', {'mollist':mollist, 'currpage':page, 'ofmols':nofmols, 'currentpath':'?'})
 
 def search(request):
     error = []
@@ -60,8 +56,9 @@ def search(request):
     if form.is_valid() == False:
         for item in form.errors:
             error.append(form[item].errors)
-        return render(request, 'search.html', {'servername':servername, 'error': error, 'form':form})
+        return render(request, 'search.html', {'error': error, 'form':form})
     moltext = form.cleaned_data['moltext']
+    smilesstring = unicode(form.cleaned_data['smiles'])
     minmw = form.cleaned_data['minmw']
     maxmw = form.cleaned_data['maxmw']
     minlogp = form.cleaned_data['minlogp']
@@ -84,71 +81,65 @@ def search(request):
     platebarcode = form.cleaned_data['platebarcode']
     samplebarcode = form.cleaned_data['samplebarcode']
     storage = form.cleaned_data['storage']
-    if 'similarity' in request.GET:
+    
+    # Handling of mol or smi input
+    if moltext:
+        moltext = pybel.readstring("mol", str(moltext))
+        smiles = moltext.write("smi").split("\t")[0]
+        print smiles
+    elif smilesstring:
+        smiles = str(smilesstring)
+        print smiles
+    
+    if 'similarity' in request.GET or 'substructure' in request.GET:
+        try:
+            test = pybel.readstring("smi", smiles)
+            tanimoto = float(form.cleaned_data['tanimoto'])
+        except:
+            error.append("Molecule or tanimoto index not valid!")
+
+    if error:
+        return render(request, 'search.html', {'error': error, 'form':form})
+
+    if 'similarity' in request.GET and smiles:
         #similartiy search
+        mollist = id_search(cas, name, storageid, supplierid, supplier, chn, molclass, platebarcode, samplebarcode, storage)
+        mollist = fast_fp_search(mollist, smiles, tanimoto)
+        mollist = properties_search(mollist, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd, mintpsa, maxtpsa, minfsp3, maxfsp3)
+        paginator = Paginator(mollist, 15)
+        page = request.GET.get('page') #get value of query
+        nofmols = len(mollist)
+        currentpath = request.get_full_path()
+        currentpath = get_page_wo_page(currentpath)
         try:
-            #check if smiles or mol from editor is valid and run search
-            if moltext:
-                try:
-                    moltext = pybel.readstring("mol", str(moltext))
-                    smiles = moltext.write("smi")
-                except:
-                    smiles = str(form.cleaned_data['smiles'])
-            query = pybel.readstring("smi", smiles)
-            tanimoto = form.cleaned_data['tanimoto']
-            mollist = id_search(cas, name, storageid, supplierid, supplier, chn, molclass, platebarcode, samplebarcode, storage)
-            mollistsmiles = fast_fp_search(mollist, smiles, tanimoto)
-            mollist = properties_search(mollistsmiles, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd, mintpsa, maxtpsa, minfsp3, maxfsp3)
-            paginator = Paginator(mollist, 15)
-            page = request.GET.get('page') #get value of query
-            nofmols = len(mollist)
-            currentpath = request.get_full_path()
-            currentpath = get_page_wo_page(currentpath)
-            try:
-                mollist = paginator.page(page)
-            except PageNotAnInteger:
-                # If page is not an integer, deliver first page.
-                mollist = paginator.page(1)
-            except EmptyPage:
-                # If page is out of range (e.g. 9999), deliver last page of results.
-                mollist = paginator.page(paginator.num_pages)
-            return render(request, 'browse.html', {'servername':servername, 'mollist':mollist,'currpage':page, 'ofmols':nofmols, 'currentpath':currentpath})
-        except:
-            #if smiles is not valid, return error
-            error.append('SMILES code or tanimoto index is not valid!')
-            return render(request, 'search.html', {'servername':servername, 'error': error, 'form':form})
-    elif 'substructure' in request.GET:
+            mollist = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            mollist = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            mollist = paginator.page(paginator.num_pages)
+        return render(request, 'browse.html', {'mollist':mollist,'currpage':page, 'ofmols':nofmols, 'currentpath':currentpath})
+    elif 'substructure' in request.GET and smiles:
         #substructure search
+        smarts = smiles
+        mollist = id_search(cas, name, storageid, supplierid, supplier, chn, molclass, platebarcode, samplebarcode, storage)
+        mollist = smarts_search(mollist, smarts)
+        mollist = properties_search(mollist, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd, mintpsa, maxtpsa, minfsp3, maxfsp3)
+        paginator = Paginator(mollist, 15)
+        page = request.GET.get('page') #get value of query
+        nofmols = len(mollist)
+        currentpath = request.get_full_path()
+        currentpath = get_page_wo_page(currentpath)
         try:
-            #check if smiles/smarts or mol from editor is valid
-            if moltext:
-                try:
-                    moltext = pybel.readstring("mol", str(moltext))
-                    smarts = moltext.write("smi")
-                except:
-                    smarts = str(form.cleaned_data['smiles'])
-            query = pybel.Smarts(smarts)
-            mollist = id_search(cas, name, storageid, supplierid, supplier, chn, molclass, platebarcode, samplebarcode, storage)
-            mollistsmart = smarts_search(mollist, smarts)
-            mollist = properties_search(mollistsmart, minmw, maxmw, minlogp, maxlogp, minhba, maxhba, minhbd, maxhbd, mintpsa, maxtpsa, minfsp3, maxfsp3)
-            paginator = Paginator(mollist, 15)
-            page = request.GET.get('page') #get value of query
-            nofmols = len(mollist)
-            currentpath = request.get_full_path()
-            currentpath = get_page_wo_page(currentpath)
-            try:
-                mollist = paginator.page(page)
-            except PageNotAnInteger:
-                # If page is not an integer, deliver first page.
-                mollist = paginator.page(1)
-            except EmptyPage:
-                # If page is out of range (e.g. 9999), deliver last page of results.
-                mollist = paginator.page(paginator.num_pages)
-            return render(request, 'browse.html', {'servername':servername, 'mollist':mollist,'currpage':page, 'ofmols':nofmols, 'currentpath':currentpath})
-        except:
-            #if smiles is not valid, return error
-            error.append('SMILES/SMARTS code is not valid!')
-            return render(request, 'search.html', {'servername':servername, 'error': error, 'form':form})
+            mollist = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            mollist = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            mollist = paginator.page(paginator.num_pages)
+        return render(request, 'browse.html', {'mollist':mollist,'currpage':page, 'ofmols':nofmols, 'currentpath':currentpath})
     elif 'properties' in request.GET:
         #properties and IDs search
         mollist = id_search(cas, name, storageid, supplierid, supplier, chn, molclass, platebarcode, samplebarcode, storage)
@@ -169,11 +160,10 @@ def search(request):
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver last page of results.
             mollist = paginator.page(paginator.num_pages)
-        return render(request, 'browse.html', {'servername':servername, 'mollist':mollist,'currpage':page, 'ofmols':nofmols, 'currentpath':currentpath})
-    
+        return render(request, 'browse.html', {'mollist':mollist,'currpage':page, 'ofmols':nofmols, 'currentpath':currentpath})
     else:
         form = SearchForm()
-    return render(request, 'search.html', {'servername':servername, 'error': error, 'form':form})
+    return render(request, 'search.html', {'error': error, 'form':form})
     
 def statistics(request):
     logp = []
@@ -185,7 +175,6 @@ def statistics(request):
     fsp3 = []
     nrb = []
     complexity = []
-    #c = 0 # uncomment for testing, it stops after 100
     for mol in Molecule.objects.all():
         try:
             float(mol.logP)
@@ -209,11 +198,8 @@ def statistics(request):
                     names.append("X")
                 else:
                     names.append(mol.name)
-            #c += 1 # uncomment for testing
         except:
             pass
-        #if c == 100: # uncomment for testing
-        #    break # uncomment for testing
     logpmw = dumps(zip(logp, mw))
     hbamw = dumps(zip(hba, mw))
     hbdmw = dumps(zip(hbd, mw))
@@ -235,7 +221,7 @@ def statistics(request):
     hbdhist = dumps(zip(array(hbdedge[:-1]).tolist(), array(hbdhist).tolist()))
     tpsahist, tpsaedge = histogram(tpsa, bins=range(0, 250, 10))
     tpsahist = dumps(zip(array(tpsaedge[:-1]).tolist(), array(tpsahist).tolist()))
-    return render(request, 'statistics.html', {'servername':servername, 'logpmw':logpmw, 'hbamw':hbamw, 'hbdmw':hbdmw, 'tpsamw':tpsamw, 'mwhist':mwhist, 'fsp3hist':fsp3hist, 'nrbhist':nrbhist, 'complexityhist':complexityhist, 'logphist':logphist, 'hbahist':hbahist, 'hbdhist':hbdhist, 'tpsahist':tpsahist})
+    return render(request, 'statistics.html', {'logpmw':logpmw, 'hbamw':hbamw, 'hbdmw':hbdmw, 'tpsamw':tpsamw, 'mwhist':mwhist, 'fsp3hist':fsp3hist, 'nrbhist':nrbhist, 'complexityhist':complexityhist, 'logphist':logphist, 'hbahist':hbahist, 'hbdhist':hbdhist, 'tpsahist':tpsahist})
 
 def upload(request):
     """
@@ -250,17 +236,17 @@ def upload(request):
             mol.save()
         success = []
         success.append(str(nummols) + " molecule(s) were added to the database!")
-        return render(request, 'uploadresult.html', {'servername':servername, 'success':success})
+        return render(request, 'uploadresult.html', {'success':success})
     
     if 'cancel' in request.POST:
         Molecule.objects.filter(randomstring__contains=request.session.session_key).delete()
         success = []
         success.append("No molecules were added to the database!")
-        return render(request, 'uploadresult.html', {'servername':servername, 'success':success})
+        return render(request, 'uploadresult.html', {'success':success})
     if 'logout' in request.POST:
         # Log out the user
         auth.logout(request)
-        return HttpResponseRedirect(servername + "/upload.html")
+        return HttpResponseRedirect("/upload.html")
     if 'single' in request.POST:
         form = SubmitSingle(request.POST)
         form.is_valid()
@@ -291,11 +277,11 @@ def upload(request):
         if form.is_valid() == False or badsmiles:
             for item in form.errors:
                 error.append(form[item].errors)
-            return render(request, 'uploadresult.html', {'servername':servername, 'error':error})
+            return render(request, 'uploadresult.html', {'error':error})
         
         addsingle(name, altname, supplier, supplierID, storage, storageID, unit, amount, cas, smiles, comment, molclass, platebarcode, samplebarcode, randomstring)
         mollist = Molecule.objects.filter(randomstring__contains=randomstring)
-        return render(request, 'uploadresult.html', {'servername':servername, 'debugname':name, 'mollist':mollist})
+        return render(request, 'uploadresult.html', {'debugname':name, 'mollist':mollist})
     
     if 'table' in request.POST:
         form = UploadFileForm(request.POST, request.FILES)
@@ -309,24 +295,24 @@ def upload(request):
             csvdata = csv.reader(csvfile, dialect="excel")
             addtable(csvdata, cmdline, userinput, randomstring)
             mollist = Molecule.objects.filter(randomstring__contains=randomstring)
-            return render(request, 'uploadresult.html', {'servername':servername, 'mollist':mollist})
+            return render(request, 'uploadresult.html', {'mollist':mollist})
         else:
             for item in form.errors:
                 error.append(form[item].errors)
-                return render(request, 'uploadresult.html', {'servername':servername, 'error':error})
+                return render(request, 'uploadresult.html', {'error':error})
     
     if uploadsingle == False and uploadtable == False:
-        return render(request, 'upload.html', {'servername':servername, 'nogo':'nogo'})
+        return render(request, 'upload.html', {'nogo':'nogo'})
     else:
         if logintoupload == True and not request.user.is_authenticated():
             # Serve notice that you need to log in in order to upload
             form = SubmitSingle()
             fileform = UploadFileForm()
-            return render(request, 'upload.html', {'servername':servername, 'form':form, 'fileform':fileform})
+            return render(request, 'upload.html', {'form':form, 'fileform':fileform})
         else:
             form = SubmitSingle()
             fileform = UploadFileForm()
-            return render(request, 'upload.html', {'servername':servername, 'logedin':'ok', 'single':uploadsingle, 'table':uploadtable, 'form':form, 'fileform':fileform})
+            return render(request, 'upload.html', {'logedin':'ok', 'single':uploadsingle, 'table':uploadtable, 'form':form, 'fileform':fileform})
         
 def login(request):
     """
@@ -334,25 +320,19 @@ def login(request):
     """
     if 'logout' in request.POST:
         auth.logout(request)
-        return HttpResponseRedirect(servername + "/upload.html")
+        return HttpResponseRedirect("/upload.html")
     if request.user.is_authenticated():
-        return render(request, 'login.html', {'servername':servername, 'logout':'logout'})
+        return render(request, 'login.html', {'logout':'logout'})
     else:
         if 'login' in request.POST:
             username = request.POST['username']
             password = request.POST['password']
             user = auth.authenticate(username=username, password=password)
             if user is not None:
-                if user.is_active:
-                    auth.login(request, user)
-                    return HttpResponseRedirect(servername + "/upload.html")
-            # Redirect to a success page.
-                else:
-                    pass #TODO
-            # Return a 'disabled account' error message
+                auth.login(request, user)
+                return HttpResponseRedirect("/upload.html")
             else:
-                pass #TODO
+                return render(request, 'login.html') #TODO
         else:
-            return render(request, 'login.html', {'servername':servername})
+            return render(request, 'login.html')
         # Return an 'invalid login' error message.
-    

@@ -21,14 +21,14 @@ $("#alert").click(function () {
 </script>
 
 <meta charset="utf-8" http-equiv="X-UA-Compatible" chrome=1>
-<link rel="stylesheet" type="text/css" href="{{servername}}/static/js/ChemDoodleWeb.css" />
-<link rel="stylesheet" href="{{servername}}/static/js/sketcher/jquery-ui-1.9.2.custom.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="/static/js/ChemDoodleWeb.css" />
+<link rel="stylesheet" href="/static/js/sketcher/jquery-ui-1.9.2.custom.css" type="text/css">
 
-<script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb-libs.js"></script>
-<script type="text/javascript" src="{{servername}}/static/js/ChemDoodleWeb.js"></script>
-<script type="text/javascript" src="{{servername}}/static/js/sketcher/jquery-ui-1.9.2.custom.min.js"></script>
+<script type="text/javascript" src="/static/js/ChemDoodleWeb-libs.js"></script>
+<script type="text/javascript" src="/static/js/ChemDoodleWeb.js"></script>
+<script type="text/javascript" src="/static/js/sketcher/jquery-ui-1.9.2.custom.min.js"></script>
 
-<script type="text/javascript" src="{{servername}}/static/js/sketcher/ChemDoodleWeb-sketcher.js"></script>
+<script type="text/javascript" src="/static/js/sketcher/ChemDoodleWeb-sketcher.js"></script>
     <div class="row">
     <button class="button tiny" id="infobutton"><i class="icon-question-sign"></i> How to use this form</button>
     </div>
@@ -55,14 +55,14 @@ $("#alert").click(function () {
 <section id="search" class="row">
 <form class="form-horizontal" action="/search/" method="get">
 <fieldset>
-    <legend for="sketcher"><strong><i class="icon-edit"></i> Structure editor</strong></legend>
+<legend for="sketcher"><strong><i class="icon-edit"></i> Structure editor</strong></legend>
     
-    <div name="sketcher">
-
-<script type="text/javascript">
+<div name="sketcher" class="row">
+<div>
+<script type="text/javascript" style="text-align:left;margin:auto;">
 ChemDoodle.ELEMENT['H'].jmolColor = 'black';
 ChemDoodle.ELEMENT['S'].jmolColor = '#B9A130';
-var sketcher = new ChemDoodle.SketcherCanvas('sketcher', 368, 200, {useServices:false, oneMolecule:true}, ChemDoodle.featureDetection.supports_touch(), true);
+var sketcher = new ChemDoodle.SketcherCanvas('sketcher', 500, 300, {useServices:false, oneMolecule:true}, ChemDoodle.featureDetection.supports_touch(), true);
 sketcher.specs.atoms_displayTerminalCarbonLabels_2D = true;
 sketcher.specs.atoms_useJMOLColors = true;
 sketcher.specs.bonds_clearOverlaps_2D = true;
@@ -76,6 +76,7 @@ function getmol()
     $("#molfromeditor").css('backgroundColor','#5da423');
 }
 </script>
+</div>
     <p><input class="button small" name="molfromeditor" id="molfromeditor" value="Get structure from editor" onclick="javascript:getmol()"/></p>
     <div style="display: none">
     {{form.moltext}}

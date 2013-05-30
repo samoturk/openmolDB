@@ -16,7 +16,7 @@ It was tested on current version of Arch Linux and Arch Linux ARM (yes it runs o
 
 Then deploy it as you would any other Django project.
 
-Set servername variable in openmoldb/views.py to the name of your server.
+In openmoldb/views.py set variables under "Some settings" to either False or True.
 Have a look at settings.py and set your database engine, time zone, etc.
 
 ## Bulk addition of molecules
