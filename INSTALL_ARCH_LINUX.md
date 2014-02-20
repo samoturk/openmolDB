@@ -1,7 +1,11 @@
 Quick and dirty installation on Arch Linux
 ============
+With nginx and gunicorn
+
 ## Dependencies
-`pacman -Sy git mod_wsgi2 apache python2-django openbabel python2-openbabel python2-psycopg2 postgresql python2-numpy python2-cairo cairo`
+`pacman -Sy git nginx screen python2-django openbabel python2-openbabel python2-psycopg2 postgresql python2-numpy python2-cairo cairo`
+
+Install [gunicorn](https://aur.archlinux.org/packages/gunicorn/) from AUR.
 
 ## Add user for OpenMolDB
 `useradd -m -g users -s /bin/bash openmoldb`
@@ -9,44 +13,76 @@ Quick and dirty installation on Arch Linux
 `passwd openmoldb` 
 
 ## Login as "openmoldb" user
-`git clone https://github.com/samoturk/openmolDB.github`
 
-Move OpenMolDB files in /home/openmoldb/public_html
+`mkdir /home/openmoldb/openmoldb`
+`cd /home/openmoldb/openmoldb`
+`git clone https://github.com/samoturk/openmolDB.github .`
 
-Change permissions: `chmod -R a+xr /home/openmoldb`
-
-In openmoldb/views.py set variables under "Some settings" to either False or True.
-Open ~/public_html/openmoldb/settings.py and set database varibles according to your configuration
-Run `python2 ~/public_html/manage.py syncdb`
-
-## Apache configuration
-Add to the end of /etc/httpd/conf/httpd.conf:
-```
-LoadModule wsgi_module modules/mod_wsgi.so
-Alias /static/ /home/openmoldb/public_html/static/
-
-<Directory /home/openmoldb/public_html/static>
-Order deny,allow
-Allow from all
-</Directory>
-
-WSGIScriptAlias / /home/openmoldb/public_html/openmoldb/wsgi.py
-WSGIPythonPath /home/openmoldb/public_html
-
-<Directory /home/openmoldb/public_html/openmoldb>
-<Files wsgi.py>
-Order deny,allow
-Allow from all
-</Files>
-</Directory>
-
-StartServers 1
-MinSpareServers 1
-MaxSpareServers 3
-MaxClients 50
+In ~/openmoldb/openmoldb/views.py set variables under "Some settings" to either False or True.
+Open ~/openmoldb/openmoldb/settings.py and set database varibles according to your configuration and add gunicorn to apps:
+```python
+INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.admin',
+    'openmoldbmolecules',
+    'gunicorn'
+)
 ```
 
-Start apache: `systemctl start httpd`
+Run `python2 manage.py syncdb`
+Run screen and in screen `python2 manage.py run_gunicorn`
+Now gunicorn is serving the page.
+
+## Nginx configuration
+`mkdir /var/log/nginx`
+`mkdir /var/log/nginx/logs`
+Add to modify /etc/nginx/nginx.conf to look like:
+
+```
+user root;
+worker_processes  1;
+
+error_log  /var/log/nginx/logs/error.log;
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+    keepalive_timeout  65;
+
+    server {
+        listen       80;
+        server_name  localhost;
+
+        access_log  /var/log/nginx/logs/host.access.log;
+    # proxy for gunicorn
+        location / {
+            proxy_pass http://127.0.0.1:8000;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            }
+    # serving static files
+    location /static/ {
+            root /home/openmoldb/openmoldb;
+        }
+
+         }
+
+    }
+```
+
+Start nginx: `sudo systemctl start nginx`
 
 ## Postgresql configuration
 Will add later
